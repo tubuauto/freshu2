@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Driver Console</title>
+  <link rel="stylesheet" href="/assets/app.css" />
+</head>
+<body><main class="shell">
+  <section class="topbar">
+    <h1>Driver Console</h1>
+    <div class="role-nav"><a href="/pages/index.html">All Roles</a></div>
+    <div class="controls">
+      <input id="authEmail" value="driver1@fresh2u.local" />
+      <input id="authPassword" type="password" value="pass123456" />
+      <input id="authTenant" placeholder="tenant merchant id" />
+      <button id="loginBtn">Login</button>
+    </div>
+    <pre id="authOut" class="out"></pre>
+  </section>
+
+  <section class="grid">
+    <article class="card">
+      <h2>Update Delivery Status</h2>
+      <input id="taskId" placeholder="delivery_task_id" />
+      <select id="taskStatus">
+        <option>accepted</option><option>picked_up</option><option>out_for_delivery</option><option>delivered</option><option>failed</option>
+      </select>
+      <button id="taskBtn">POST /delivery-tasks/{id}/status</button>
+      <pre id="taskOut" class="out"></pre>
+    </article>
+
+    <article class="card">
+      <h2>Driver Wallet</h2>
+      <input id="driverOwnerId" placeholder="driver user id" />
+      <button id="walletBtn">GET Wallet</button>
+      <pre id="walletOut" class="out"></pre>
+    </article>
+  </section>
+</main>
+<script src="/assets/app.js"></script>
+<script>
+Fresh2U.bindAuthPanel();
+document.getElementById("taskBtn").onclick = async () => {
+  try {
+    const id = document.getElementById("taskId").value;
+    const status = document.getElementById("taskStatus").value;
+    Fresh2U.print("taskOut", await Fresh2U.api(`/api/v1/delivery-tasks/${id}/status`, "POST", { status }));
+  } catch (e) { Fresh2U.print("taskOut", e.message); }
+};
+document.getElementById("walletBtn").onclick = async () => {
+  try {
+    const ownerId = document.getElementById("driverOwnerId").value;
+    Fresh2U.print("walletOut", await Fresh2U.api(`/api/v1/wallets/driver/${ownerId}`));
+  } catch (e) { Fresh2U.print("walletOut", e.message); }
+};
+</script>
+</body></html>

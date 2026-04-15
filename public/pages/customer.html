@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Customer Console</title>
+  <link rel="stylesheet" href="/assets/app.css" />
+</head>
+<body>
+<main class="shell">
+  <section class="topbar">
+    <h1>Customer Console</h1>
+    <div class="role-nav"><a href="/pages/index.html">All Roles</a></div>
+    <div class="controls">
+      <input id="authEmail" placeholder="email" value="customer1@fresh2u.local" />
+      <input id="authPassword" type="password" placeholder="password" value="pass123456" />
+      <input id="authTenant" placeholder="tenant merchant id" />
+      <button id="loginBtn">Login</button>
+    </div>
+    <pre id="authOut" class="out"></pre>
+  </section>
+
+  <section class="grid">
+    <article class="card">
+      <h2>List Products</h2>
+      <button id="listProductsBtn">GET /products</button>
+      <pre id="productsOut" class="out"></pre>
+    </article>
+
+    <article class="card">
+      <h2>Create Member Order</h2>
+      <textarea id="memberOrderBody">{"leader_user_id":"","items":[{"product_id":"","product_name":"Tomato","qty":2,"unit_price":18}]}</textarea>
+      <button id="createMemberOrderBtn">POST /member-orders</button>
+      <pre id="memberOrderOut" class="out"></pre>
+    </article>
+
+    <article class="card">
+      <h2>Pay Member Order</h2>
+      <input id="memberOrderId" placeholder="member_order_id" />
+      <button id="payMemberOrderBtn">POST /member-orders/{id}/pay</button>
+      <pre id="payOut" class="out"></pre>
+    </article>
+
+    <article class="card">
+      <h2>Wallet</h2>
+      <input id="customerUserId" placeholder="customer_user_id" />
+      <button id="walletBtn">GET Wallet</button>
+      <pre id="walletOut" class="out"></pre>
+    </article>
+  </section>
+</main>
+<script src="/assets/app.js"></script>
+<script>
+  Fresh2U.bindAuthPanel();
+
+  document.getElementById("listProductsBtn").onclick = async () => {
+    try { Fresh2U.print("productsOut", await Fresh2U.api("/api/v1/products")); }
+    catch (e) { Fresh2U.print("productsOut", e.message); }
+  };
+
+  document.getElementById("createMemberOrderBtn").onclick = async () => {
+    try {
+      const body = JSON.parse(document.getElementById("memberOrderBody").value || "{}");
+      Fresh2U.print("memberOrderOut", await Fresh2U.api("/api/v1/member-orders", "POST", body));
+    } catch (e) { Fresh2U.print("memberOrderOut", e.message); }
+  };
+
+  document.getElementById("payMemberOrderBtn").onclick = async () => {
+    try {
+      const id = document.getElementById("memberOrderId").value;
+      Fresh2U.print("payOut", await Fresh2U.api(`/api/v1/member-orders/${id}/pay`, "POST", { settle_external: true }));
+    } catch (e) { Fresh2U.print("payOut", e.message); }
+  };
+
+  document.getElementById("walletBtn").onclick = async () => {
+    try {
+      const userId = document.getElementById("customerUserId").value;
+      Fresh2U.print("walletOut", await Fresh2U.api(`/api/v1/wallets/customer/${userId}`));
+    } catch (e) { Fresh2U.print("walletOut", e.message); }
+  };
+</script>
+</body>
+</html>

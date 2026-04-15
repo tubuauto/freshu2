@@ -1,0 +1,146 @@
+:root {
+  --bg: linear-gradient(135deg, #f9f5ee 0%, #eef7f2 45%, #e7f0fb 100%);
+  --surface: rgba(255, 255, 255, 0.88);
+  --surface-strong: #ffffff;
+  --text: #14221a;
+  --muted: #4b5e53;
+  --accent: #0f8b6d;
+  --accent-2: #f06a4a;
+  --line: #dce8e1;
+  --danger: #b3261e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+.shell {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.topbar {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  backdrop-filter: blur(4px);
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.controls {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+input,
+select,
+button,
+textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  background: #fff;
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+}
+
+button.alt {
+  background: var(--accent-2);
+}
+
+.grid {
+  margin-top: 18px;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.card {
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.card h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+.note {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.out {
+  background: #122218;
+  color: #e8f4ed;
+  border-radius: 10px;
+  padding: 10px;
+  min-height: 110px;
+  overflow: auto;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+}
+
+.error {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.role-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.role-nav a {
+  padding: 7px 10px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #fff;
+  background: #295d4f;
+  font-size: 0.86rem;
+}
+
+@media (max-width: 640px) {
+  .shell {
+    padding: 12px;
+  }
+
+  .topbar {
+    border-radius: 12px;
+  }
+}

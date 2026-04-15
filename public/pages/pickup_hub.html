@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pickup Hub Console</title>
+  <link rel="stylesheet" href="/assets/app.css" />
+</head>
+<body><main class="shell">
+  <section class="topbar">
+    <h1>Pickup Hub Console</h1>
+    <div class="role-nav"><a href="/pages/index.html">All Roles</a></div>
+    <div class="controls">
+      <input id="authEmail" value="hub1@fresh2u.local" />
+      <input id="authPassword" type="password" value="pass123456" />
+      <input id="authTenant" placeholder="tenant merchant id" />
+      <button id="loginBtn">Login</button>
+    </div>
+    <pre id="authOut" class="out"></pre>
+  </section>
+
+  <section class="grid">
+    <article class="card">
+      <h2>Record Receipt</h2>
+      <input id="pickupHubId1" placeholder="pickup_hub_id" />
+      <textarea id="receiptBody">{"fulfillment_order_id":"","leader_order_id":"","note":"goods received"}</textarea>
+      <button id="receiptBtn">POST /pickup-hubs/{id}/receipts</button>
+      <pre id="receiptOut" class="out"></pre>
+    </article>
+
+    <article class="card">
+      <h2>Record Handover</h2>
+      <input id="pickupHubId2" placeholder="pickup_hub_id" />
+      <textarea id="handoverBody">{"receipt_id":"","handover_to_type":"driver","handover_to_id":"","note":"handover complete"}</textarea>
+      <button id="handoverBtn">POST /pickup-hubs/{id}/handovers</button>
+      <pre id="handoverOut" class="out"></pre>
+    </article>
+  </section>
+</main>
+<script src="/assets/app.js"></script>
+<script>
+Fresh2U.bindAuthPanel();
+document.getElementById("receiptBtn").onclick = async () => {
+  try {
+    const id = document.getElementById("pickupHubId1").value;
+    Fresh2U.print("receiptOut", await Fresh2U.api(`/api/v1/pickup-hubs/${id}/receipts`, "POST", JSON.parse(document.getElementById("receiptBody").value)));
+  } catch (e) { Fresh2U.print("receiptOut", e.message); }
+};
+document.getElementById("handoverBtn").onclick = async () => {
+  try {
+    const id = document.getElementById("pickupHubId2").value;
+    Fresh2U.print("handoverOut", await Fresh2U.api(`/api/v1/pickup-hubs/${id}/handovers`, "POST", JSON.parse(document.getElementById("handoverBody").value)));
+  } catch (e) { Fresh2U.print("handoverOut", e.message); }
+};
+</script>
+</body></html>

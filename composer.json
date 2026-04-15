@@ -1,0 +1,15 @@
+{
+  "name": "fresh2u/modular-monolith",
+  "description": "Leader-driven group buying SaaS with unified wallet and settlement architecture",
+  "type": "project",
+  "require": {
+    "php": "^8.5",
+    "ext-pdo": "*",
+    "ext-pdo_pgsql": "*"
+  },
+  "scripts": {
+    "serve": "php -S 127.0.0.1:8080 -t public",
+    "migrate": "php bin/migrate.php",
+    "seed": "php bin/seed.php"
+  }
+}
