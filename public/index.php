@@ -4,100 +4,122 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
-use App\Modules\Accounting\Controllers\AccountingController;
-use App\Modules\Accounting\Repositories\AccountingRepository;
-use App\Modules\Accounting\Services\AccountingService;
-use App\Modules\Auth\Controllers\AuthController;
-use App\Modules\Auth\Repositories\AuthRepository;
-use App\Modules\Auth\Services\AuthService;
-use App\Modules\Coupons\Controllers\CouponController;
-use App\Modules\Coupons\Repositories\CouponRepository;
-use App\Modules\Coupons\Services\CouponService;
-use App\Modules\Fulfillment\Controllers\FulfillmentController;
-use App\Modules\Fulfillment\Repositories\FulfillmentRepository;
-use App\Modules\Fulfillment\Services\FulfillmentService;
-use App\Modules\Orders\Controllers\OrderController;
-use App\Modules\Orders\Repositories\OrderRepository;
-use App\Modules\Orders\Services\OrderService;
-use App\Modules\Products\Controllers\ProductController;
-use App\Modules\Products\Repositories\ProductRepository;
-use App\Modules\Products\Services\ProductService;
-use App\Modules\Settlements\Controllers\SettlementController;
-use App\Modules\Settlements\Repositories\SettlementRepository;
-use App\Modules\Settlements\Services\SettlementService;
-use App\Modules\Wallet\Controllers\WalletController;
-use App\Modules\Wallet\Repositories\WalletRepository;
-use App\Modules\Wallet\Repositories\RechargeRepository;
-use App\Modules\Wallet\Services\RechargeService;
-use App\Modules\Wallet\Services\WalletService;
-use App\Modules\Withdrawals\Controllers\WithdrawalController;
-use App\Modules\Withdrawals\Repositories\WithdrawalRepository;
-use App\Modules\Withdrawals\Services\WithdrawalService;
-use App\Shared\Auth\JwtService;
-use App\Shared\Auth\PasswordService;
-use App\Shared\Database\Connection;
+use App\Shared\Http\ApiKernel;
 use App\Shared\Http\Request;
 use App\Shared\Http\Response;
-use App\Shared\Http\Router;
 use App\Shared\Support\Exceptions\HttpException;
 
 $appConfig = require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'app.php';
-$pdo = Connection::get();
-
-$jwtService = new JwtService();
-$authRepository = new AuthRepository($pdo);
-$authService = new AuthService($authRepository, new PasswordService(), $jwtService);
-
-$productRepository = new ProductRepository($pdo);
-$productService = new ProductService($productRepository);
-
-$walletRepository = new WalletRepository($pdo);
-$walletService = new WalletService($pdo, $walletRepository, $appConfig['currency']);
-$rechargeRepository = new RechargeRepository($pdo);
-$rechargeService = new RechargeService($pdo, $rechargeRepository, $walletService, $appConfig);
-
-$couponRepository = new CouponRepository($pdo);
-$couponService = new CouponService($pdo, $couponRepository);
-
-$orderRepository = new OrderRepository($pdo);
-$orderService = new OrderService($pdo, $orderRepository, $walletService, $couponService, $appConfig['currency']);
-
-$fulfillmentRepository = new FulfillmentRepository($pdo);
-$fulfillmentService = new FulfillmentService($pdo, $fulfillmentRepository);
-
-$accountingRepository = new AccountingRepository($pdo);
-$accountingService = new AccountingService($pdo, $accountingRepository);
-
-$settlementRepository = new SettlementRepository($pdo);
-$settlementService = new SettlementService($pdo, $settlementRepository, $walletService);
-
-$withdrawalRepository = new WithdrawalRepository($pdo);
-$withdrawalService = new WithdrawalService($pdo, $withdrawalRepository, $walletService);
-
-$controllers = [
-    'auth' => new AuthController($authService, $jwtService),
-    'products' => new ProductController($productService, $authService),
-    'orders' => new OrderController($orderService, $authService),
-    'wallet' => new WalletController($walletService, $rechargeService, $authService),
-    'coupons' => new CouponController($couponService, $authService),
-    'fulfillment' => new FulfillmentController($fulfillmentService, $authService),
-    'accounting' => new AccountingController($accountingService, $authService),
-    'settlements' => new SettlementController($settlementService, $authService),
-    'withdrawals' => new WithdrawalController($withdrawalService, $authService),
-];
-
-$router = new Router();
-$routeRegistrar = require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'routes.php';
-$routeRegistrar($router, $controllers);
-
 $request = Request::fromGlobals();
+$currentPath = $request->path;
 
-try {
-    [$status, $payload] = $router->dispatch($request);
-    Response::json($payload, $status);
-} catch (HttpException $e) {
-    Response::json(['error' => $e->getMessage()], $e->statusCode());
-} catch (Throwable $e) {
-    $message = $appConfig['debug'] ? $e->getMessage() : 'Internal server error';
-    Response::json(['error' => $message], 500);
+if ($currentPath === '/health') {
+    Response::json(['ok' => true], 200);
+    exit;
+}
+
+if ($request->method === 'GET') {
+    if ($currentPath === '/') {
+        servePublicFile(__DIR__ . DIRECTORY_SEPARATOR . 'pages' . DIRECTORY_SEPARATOR . 'home.html');
+        exit;
+    }
+
+    if (tryServePublicAsset($currentPath, __DIR__)) {
+        exit;
+    }
+}
+
+if (isApiPath($currentPath)) {
+    try {
+        $kernel = new ApiKernel($appConfig);
+        [$status, $payload] = $kernel->handle($request);
+        Response::json($payload, $status);
+    } catch (HttpException $e) {
+        Response::json(['error' => $e->getMessage()], $e->statusCode());
+    } catch (Throwable $e) {
+        $message = $appConfig['debug'] ? $e->getMessage() : 'Internal server error';
+        Response::json(['error' => $message], 500);
+    }
+    exit;
+}
+
+if ($request->method === 'GET') {
+    servePublicFile(__DIR__ . DIRECTORY_SEPARATOR . 'pages' . DIRECTORY_SEPARATOR . 'home.html');
+    exit;
+}
+
+Response::json(['error' => 'Route not found'], 404);
+
+function isApiPath(string $path): bool
+{
+    return str_starts_with($path, '/api/');
+}
+
+function tryServePublicAsset(string $path, string $publicRoot): bool
+{
+    $relative = ltrim(urldecode($path), '/');
+    if ($relative === '') {
+        return false;
+    }
+
+    $target = realpath($publicRoot . DIRECTORY_SEPARATOR . $relative);
+    $root = realpath($publicRoot);
+    if ($target === false || $root === false || !is_file($target)) {
+        return false;
+    }
+
+    $normalizedRoot = str_replace('\\', '/', $root);
+    $normalizedTarget = str_replace('\\', '/', $target);
+    if (!str_starts_with($normalizedTarget, $normalizedRoot . '/')) {
+        return false;
+    }
+
+    $extension = strtolower(pathinfo($target, PATHINFO_EXTENSION));
+    $allowed = [
+        'html', 'css', 'js', 'json', 'map',
+        'png', 'jpg', 'jpeg', 'gif', 'svg', 'ico', 'webp',
+        'woff', 'woff2',
+    ];
+
+    if (!in_array($extension, $allowed, true)) {
+        return false;
+    }
+
+    servePublicFile($target);
+    return true;
+}
+
+function servePublicFile(string $file): void
+{
+    if (!is_file($file)) {
+        http_response_code(404);
+        header('Content-Type: text/plain; charset=utf-8');
+        echo 'Not Found';
+        return;
+    }
+
+    $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+    $mimeMap = [
+        'html' => 'text/html; charset=utf-8',
+        'css' => 'text/css; charset=utf-8',
+        'js' => 'application/javascript; charset=utf-8',
+        'json' => 'application/json; charset=utf-8',
+        'map' => 'application/json; charset=utf-8',
+        'png' => 'image/png',
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'gif' => 'image/gif',
+        'svg' => 'image/svg+xml',
+        'ico' => 'image/x-icon',
+        'webp' => 'image/webp',
+        'woff' => 'font/woff',
+        'woff2' => 'font/woff2',
+    ];
+
+    $mime = $mimeMap[$extension] ?? 'application/octet-stream';
+
+    http_response_code(200);
+    header('Content-Type: ' . $mime);
+    header('Cache-Control: public, max-age=1800');
+    readfile($file);
 }

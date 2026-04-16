@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fresh2U · Leader-Driven Group Buying SaaS</title>
+  <meta name="description" content="Fresh2U 团长驱动协同团购 SaaS：统一钱包、充值、优惠券、履约交接、结算与提现全链路。" />
+  <link rel="stylesheet" href="/assets/landing.css" />
+</head>
+<body>
+  <div class="landing">
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/">
+          <span class="brand-dot">F2</span>
+          <span>Fresh2U</span>
+        </a>
+
+        <nav class="primary-nav">
+          <a href="#business">业务链路</a>
+          <a href="#wallet">统一钱包</a>
+          <a href="#roles">角色入口</a>
+          <a href="#auth">登录注册</a>
+        </nav>
+
+        <div class="header-actions">
+          <a class="btn btn-light" href="/pages/index.html">角色目录</a>
+          <a class="btn btn-brand" href="#auth">立即登录</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-inner">
+          <article data-reveal>
+            <p class="kicker">Leader-First Collaborative Commerce</p>
+            <h1 class="hero-title">团长驱动的协同团购 SaaS</h1>
+            <p class="hero-subtitle">不是公开商城，而是围绕 leader 组织交易、履约与结算的业务操作系统。</p>
+            <p class="hero-copy">
+              从 customer 下单到 leader 合单，再到 merchant 履约、pickup hub 交接、driver 最后一公里配送，
+              所有关键动作都通过统一 API 与结构化状态机完成，支持多租户隔离与可审计财务流水。
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-brand" href="#auth">登录并进入工作台</a>
+              <a class="btn btn-light" href="#roles">查看角色工作台</a>
+            </div>
+          </article>
+
+          <aside class="hero-panel" data-reveal>
+            <h3>核心业务闭环</h3>
+            <p>Leader attribution + Unified Wallet + Fulfillment Handoff + Settlement Ledger</p>
+            <div class="hero-flow">
+              <div class="flow-item"><span class="flow-index">1</span><div><strong>member_orders</strong><span>customer 自助下单或 leader 代客下单，始终绑定 leader</span></div></div>
+              <div class="flow-item"><span class="flow-index">2</span><div><strong>leader_orders</strong><span>团长合单后提交 merchant，成为平台主交易订单</span></div></div>
+              <div class="flow-item"><span class="flow-index">3</span><div><strong>fulfillment + delivery</strong><span>merchant 责任到 pickup hub，最终以送达 customer 为完成</span></div></div>
+              <div class="flow-item"><span class="flow-index">4</span><div><strong>wallet + settlement</strong><span>收益先进 earnings，结算后才入钱包 withdrawable</span></div></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="business" class="section" data-reveal>
+        <header class="section-head">
+          <p class="section-kicker">Business Flow</p>
+          <h2 class="section-title">交易与履约链路</h2>
+          <p class="section-desc">平台按角色职责切分业务边界，既支持线上钱包支付，也保留线下收款审计轨迹。</p>
+        </header>
+        <div class="flow-rail">
+          <div class="flow-step"><strong>Step 1 · Customer / Leader 下单</strong>customer 必须绑定 leader；member_orders 可自助或代下单，记录 payment_status 与 collection_status。</div>
+          <div class="flow-step"><strong>Step 2 · Leader 合单采购</strong>leader_orders 为主交易订单，集中提交 merchant，决定 pickup hub 与后续配送协同。</div>
+          <div class="flow-step"><strong>Step 3 · Merchant 至 Pickup Hub</strong>merchant 履约完成定义为货到 pickup hub，随后由 hub 确认收货并发起交接。</div>
+          <div class="flow-step"><strong>Step 4 · Driver 最后一公里</strong>delivery_tasks 支持 leader_self 与 independent_driver，最终以 delivered / completed 结束交易。</div>
+        </div>
+      </section>
+
+      <section id="wallet" class="section" data-reveal>
+        <header class="section-head">
+          <p class="section-kicker">Wallet + Ledger</p>
+          <h2 class="section-title">统一钱包与结算台账</h2>
+          <p class="section-desc">钱包采用 owner_type + owner_id 模型，不允许隐式改余额，所有变动必须可追踪。</p>
+        </header>
+        <div class="wallet-grid">
+          <article class="wallet-cell">
+            <h4>withdrawable_balance</h4>
+            <p>已结算、可提现资金。包括 leader 佣金、driver 配送费、pickup hub 服务费、merchant 与 supply partner 的已结算收入。</p>
+          </article>
+          <article class="wallet-cell">
+            <h4>non_withdrawable_balance</h4>
+            <p>平台消耗型余额。可用于订单支付但不可提现，例如充值赠送与补贴激励，默认优先消耗。</p>
+          </article>
+          <article class="wallet-cell">
+            <h4>frozen_balance</h4>
+            <p>冻结资金用于提现审核、风控锁定、争议处理。审批通过或驳回后再完成资金释放或回退。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="roles" class="section" data-reveal>
+        <header class="section-head">
+          <p class="section-kicker">Role Entrances</p>
+          <h2 class="section-title">角色工作台入口</h2>
+          <p class="section-desc">登录后将自动按角色跳转；也可从下方直接查看对应角色页面结构。</p>
+        </header>
+        <div class="role-grid">
+          <article class="role-cell"><h4>customer</h4><p>团长前台、商品、下单、钱包、充值、优惠券。</p><a href="javascript:void(0)" data-role-link="customer">进入 customer 页面</a></article>
+          <article class="role-cell"><h4>leader</h4><p>客户管理、代客下单、member_orders、leader_orders、佣金提现。</p><a href="javascript:void(0)" data-role-link="leader">进入 leader 工作台</a></article>
+          <article class="role-cell"><h4>merchant</h4><p>商品管理、团长订单、履约中心、结算中心、钱包提现。</p><a href="javascript:void(0)" data-role-link="merchant">进入 merchant 后台</a></article>
+          <article class="role-cell"><h4>pickup_hub</h4><p>到货确认、交接记录、收益结算与钱包。</p><a href="javascript:void(0)" data-role-link="pickup_hub">进入 pickup_hub 页面</a></article>
+          <article class="role-cell"><h4>driver</h4><p>任务列表、提货确认、送达确认、配送收益。</p><a href="javascript:void(0)" data-role-link="driver">进入 driver 页面</a></article>
+          <article class="role-cell"><h4>admin</h4><p>角色治理、充值审核、提现审核、结算台账、风控。</p><a href="javascript:void(0)" data-role-link="admin">进入 admin 后台</a></article>
+        </div>
+      </section>
+
+      <section id="auth" class="section auth-section" data-reveal>
+        <header class="section-head">
+          <p class="section-kicker">Start</p>
+          <h2 class="section-title">登录 / 注册</h2>
+          <p class="section-desc">登录成功后会根据角色自动跳转到对应工作台。注册用于新增租户内用户账号。</p>
+        </header>
+
+        <div class="auth-surface">
+          <div class="auth-grid">
+            <article class="auth-card">
+              <h3>账号登录</h3>
+              <p>建议先填写 tenant_merchant_id，便于进入后直接带上租户上下文。</p>
+              <form id="loginForm" class="form-grid">
+                <div class="field"><label for="loginEmail">邮箱</label><input id="loginEmail" type="email" value="customer1@fresh2u.local" required /></div>
+                <div class="field"><label for="loginPassword">密码</label><input id="loginPassword" type="password" value="pass123456" required /></div>
+                <div class="field"><label for="loginTenant">tenant_merchant_id</label><input id="loginTenant" value="10000000-0000-0000-0000-000000000001" /></div>
+                <button class="btn btn-brand" type="submit">登录并跳转</button>
+              </form>
+              <p id="loginStatus" class="status-text"></p>
+            </article>
+
+            <article class="auth-card">
+              <h3>账号注册</h3>
+              <p>customer 角色可填写 bound_leader_user_id 绑定团长。</p>
+              <form id="registerForm" class="form-grid">
+                <div class="field"><label for="registerEmail">邮箱</label><input id="registerEmail" type="email" placeholder="new.user@fresh2u.local" required /></div>
+                <div class="field"><label for="registerPassword">密码</label><input id="registerPassword" type="password" placeholder="至少 8 位" required /></div>
+                <div class="field"><label for="registerName">显示名</label><input id="registerName" placeholder="User Name" /></div>
+                <div class="field"><label for="registerRole">角色</label>
+                  <select id="registerRole">
+                    <option value="customer">customer</option>
+                    <option value="leader">leader</option>
+                    <option value="merchant">merchant</option>
+                    <option value="supply_partner">supply_partner</option>
+                    <option value="pickup_hub">pickup_hub</option>
+                    <option value="driver">driver</option>
+                    <option value="admin">admin</option>
+                  </select>
+                </div>
+                <div class="field"><label for="registerTenant">tenant_merchant_id</label><input id="registerTenant" placeholder="10000000-0000-0000-0000-000000000001" /></div>
+                <div class="field"><label for="registerBoundLeader">bound_leader_user_id（customer 可选）</label><input id="registerBoundLeader" placeholder="00000000-0000-0000-0000-000000000003" /></div>
+                <button class="btn btn-light" type="submit">注册账号</button>
+              </form>
+              <p id="registerStatus" class="status-text"></p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Fresh2U · Leader-Driven Group Buying SaaS · Unified Wallet · Ledger & Settlement
+    </footer>
+  </div>
+
+  <script src="/assets/landing.js"></script>
+</body>
+</html>

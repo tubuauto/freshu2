@@ -119,3 +119,15 @@ These pages call APIs directly and keep backend headless.
 - External payment is modeled as API-side callback/simulation in phase 1.
 - Customer withdrawal is blocked by service validation (phase 1 rule).
 - Settlement posting writes ledger entries and credits wallet balances in the same workflow.
+## 10) Unified Entry (`public/index.php`)
+
+- Root path `/` now serves the **platform showcase homepage** (`/pages/home.html`) for brand, business intro, role entrances, and auth entry.
+- After login, frontend checks role and redirects to the matching workspace page:
+  - customer -> `/pages/customer.html`
+  - leader -> `/pages/leader.html`
+  - merchant -> `/pages/merchant.html`
+  - pickup_hub -> `/pages/pickup_hub.html`
+  - driver -> `/pages/driver.html`
+  - supply_partner -> `/pages/supply_partner.html`
+  - admin -> `/pages/admin.html`
+- `public/index.php` only handles bootstrap, request routing, static frontend mounting, and API dispatch.
