@@ -1,54 +1,102 @@
-<!doctype html>
-<html lang="en"><head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pickup Hub Console</title>
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pickup Hub · Fresh2U</title>
   <link rel="stylesheet" href="/assets/app.css" />
 </head>
-<body><main class="shell">
-  <section class="topbar">
-    <h1>Pickup Hub Console</h1>
-    <div class="role-nav"><a href="/pages/index.html">All Roles</a></div>
-    <div class="controls">
-      <input id="authEmail" value="hub1@fresh2u.local" />
-      <input id="authPassword" type="password" value="pass123456" />
-      <input id="authTenant" placeholder="tenant merchant id" />
-      <button id="loginBtn">Login</button>
+<body class="role-body" data-role-page="true" data-default-view="arrivals">
+<div class="app-shell">
+  <aside class="side-rail">
+    <div class="brand">
+      <span class="brand-mark"><span class="mark-dot">F2</span>Fresh2U</span>
+      <span class="role-badge">pickup_hub</span>
     </div>
-    <pre id="authOut" class="out"></pre>
-  </section>
+    <p class="rail-meta">自提点是履约交接节点：收货确认 -> 交接 leader/driver -> 收益入账。</p>
+    <nav class="nav-scroll">
+      <button class="nav-item" data-nav-view="arrivals">到货确认</button>
+      <button class="nav-item" data-nav-view="handovers">交接记录</button>
+      <button class="nav-item" data-nav-view="earnings">收益</button>
+      <button class="nav-item" data-nav-view="wallet">钱包</button>
+      <button class="nav-item" data-nav-view="states">状态页</button>
+      <a class="nav-item" style="text-decoration:none;" href="/pages/index.html">角色入口</a>
+    </nav>
+  </aside>
 
-  <section class="grid">
-    <article class="card">
-      <h2>Record Receipt</h2>
-      <input id="pickupHubId1" placeholder="pickup_hub_id" />
-      <textarea id="receiptBody">{"fulfillment_order_id":"","leader_order_id":"","note":"goods received"}</textarea>
-      <button id="receiptBtn">POST /pickup-hubs/{id}/receipts</button>
-      <pre id="receiptOut" class="out"></pre>
-    </article>
+  <div class="workspace">
+    <header class="workspace-head">
+      <div class="head-main">
+        <p class="kicker">Pickup Hub Ops</p>
+        <h1 class="headline">自提点履约交接台</h1>
+        <p class="head-desc">确认商家到货，记录交接给团长/司机，形成 pickup_hub_earnings 与可审计流水。</p>
+      </div>
+      <div class="kpi-grid">
+        <article class="kpi"><p class="kpi-label">待收货</p><p class="kpi-value">9</p><p class="kpi-sub">merchant_fulfilled</p></article>
+        <article class="kpi"><p class="kpi-label">待交接</p><p class="kpi-value">6</p><p class="kpi-sub">ready for handover</p></article>
+        <article class="kpi"><p class="kpi-label">今日服务费</p><p class="kpi-value">￥320.00</p><p class="kpi-sub">pending settlement</p></article>
+        <article class="kpi"><p class="kpi-label">异常件</p><p class="kpi-value">1</p><p class="kpi-sub">需 admin 介入</p></article>
+      </div>
+    </header>
 
-    <article class="card">
-      <h2>Record Handover</h2>
-      <input id="pickupHubId2" placeholder="pickup_hub_id" />
-      <textarea id="handoverBody">{"receipt_id":"","handover_to_type":"driver","handover_to_id":"","note":"handover complete"}</textarea>
-      <button id="handoverBtn">POST /pickup-hubs/{id}/handovers</button>
-      <pre id="handoverOut" class="out"></pre>
-    </article>
-  </section>
-</main>
+    <main class="panel-stack">
+      <section class="workspace-panel" data-view="arrivals">
+        <div class="panel-head"><h2 class="panel-title">到货确认</h2><p class="panel-desc">接收 merchant 履约货品，生成 pickup_hub_receipts。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>待确认到货</h4><ul class="entity-list"><li class="entity-item"><div class="entity-main"><p class="entity-title">FUL-001 / LOR-1023</p><p class="entity-meta">蔬菜生鲜 12 箱</p></div><span class="chip pending">waiting receipt</span></li></ul></article>
+          <article class="surface"><h4>API：确认收货</h4><div class="form-grid"><input id="hubPickupIdReceipt" value="20000000-0000-0000-0000-000000000001" /><textarea id="hubReceiptBody">{"fulfillment_order_id":"","leader_order_id":"","note":"货品完整到仓"}</textarea><div class="btn-row"><button class="btn" data-api-action data-method="POST" data-endpoint="/api/v1/pickup-hubs/{id}/receipts" data-path-input="#hubPickupIdReceipt" data-input="#hubReceiptBody" data-output="#hubArrivalOut">提交收货</button></div></div></article>
+        </div>
+        <pre id="hubArrivalOut" class="api-console"></pre>
+      </section>
+
+      <section class="workspace-panel" data-view="handovers">
+        <div class="panel-head"><h2 class="panel-title">交接记录</h2><p class="panel-desc">记录交接给 leader_self 或 independent_driver，支持追责。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>新建交接</h4><div class="form-grid"><input id="hubPickupIdHandover" value="20000000-0000-0000-0000-000000000001" /><textarea id="hubHandoverBody">{"receipt_id":"","handover_to_type":"driver","handover_to_id":"00000000-0000-0000-0000-000000000006","note":"司机签收完成"}</textarea><div class="btn-row"><button class="btn warn" data-api-action data-method="POST" data-endpoint="/api/v1/pickup-hubs/{id}/handovers" data-path-input="#hubPickupIdHandover" data-input="#hubHandoverBody" data-output="#hubHandoverOut">记录交接</button></div></div></article>
+          <article class="surface"><h4>历史交接</h4><div class="table-wrap"><table class="data-table"><thead><tr><th>receipt</th><th>交接对象</th><th>类型</th><th>时间</th><th>状态</th></tr></thead><tbody><tr><td>REC-1001</td><td>driver_006</td><td>independent_driver</td><td>09:12</td><td><span class="chip success">handed_over</span></td></tr><tr><td>REC-1002</td><td>leader_003</td><td>leader_self</td><td>09:35</td><td><span class="chip pending">in_delivery</span></td></tr></tbody></table></div></article>
+        </div>
+        <pre id="hubHandoverOut" class="api-console"></pre>
+      </section>
+
+      <section class="workspace-panel" data-view="earnings">
+        <div class="panel-head"><h2 class="panel-title">收益</h2><p class="panel-desc">pickup_hub_earnings 在 settlement 过账后才进入 withdrawable。</p></div>
+        <div class="table-wrap"><table class="data-table"><thead><tr><th>来源 leader_order</th><th>服务费</th><th>状态</th><th>结算批次</th></tr></thead><tbody><tr><td>LOR-1020</td><td>￥26.00</td><td><span class="chip pending">pending</span></td><td>-</td></tr><tr><td>LOR-1018</td><td>￥22.00</td><td><span class="chip success">settled</span></td><td>SET-20260416-01</td></tr></tbody></table></div>
+      </section>
+
+      <section class="workspace-panel" data-view="wallet">
+        <div class="panel-head"><h2 class="panel-title">自提点钱包</h2><p class="panel-desc">服务费结算后入账，可发起提现。</p></div>
+        <div class="bucket-grid">
+          <article class="bucket withdrawable"><h4>withdrawable_balance</h4><p>￥2,080.00</p><small>可提现</small></article>
+          <article class="bucket non-withdrawable"><h4>non_withdrawable_balance</h4><p>￥0.00</p><small>暂未使用</small></article>
+          <article class="bucket frozen"><h4>frozen_balance</h4><p>￥180.00</p><small>提现审核中</small></article>
+        </div>
+      </section>
+
+      <section class="workspace-panel" data-view="states">
+        <div class="panel-head"><h2 class="panel-title">状态页组件（Pickup Hub）</h2><p class="panel-desc">交接与到仓流程状态标准化。</p></div>
+        <div class="state-grid">
+          <article class="state-card"><p class="state-title">loading</p><p class="state-note">正在同步到货单...</p><div class="loading-bar"></div></article>
+          <article class="state-card"><p class="state-title">empty</p><p class="state-note">当前无待收货单。</p><span class="chip neutral" style="margin-top:8px;">empty</span></article>
+          <article class="state-card"><p class="state-title">error</p><p class="state-note">交接记录写入失败。</p><span class="chip error" style="margin-top:8px;">error</span></article>
+          <article class="state-card"><p class="state-title">success</p><p class="state-note">收货确认成功，状态更新为 at_pickup_hub。</p><span class="chip success" style="margin-top:8px;">success</span></article>
+          <article class="state-card"><p class="state-title">pending</p><p class="state-note">等待 driver 接单提货。</p><span class="chip pending" style="margin-top:8px;">pending</span></article>
+        </div>
+      </section>
+    </main>
+
+    <section class="auth-bar" style="margin-top:14px;">
+      <div class="auth-grid">
+        <input id="authEmail" value="hub1@fresh2u.local" />
+        <input id="authPassword" type="password" value="pass123456" />
+        <input id="authTenant" value="10000000-0000-0000-0000-000000000001" />
+        <button class="btn" id="loginBtn">登录</button>
+      </div>
+      <p class="inline-note">当前用户：<strong data-auth-user>-</strong> | 角色：<strong data-auth-role>-</strong> | Token：<span data-auth-token>-</span></p>
+      <pre id="authOut" class="api-console"></pre>
+    </section>
+  </div>
+</div>
 <script src="/assets/app.js"></script>
-<script>
-Fresh2U.bindAuthPanel();
-document.getElementById("receiptBtn").onclick = async () => {
-  try {
-    const id = document.getElementById("pickupHubId1").value;
-    Fresh2U.print("receiptOut", await Fresh2U.api(`/api/v1/pickup-hubs/${id}/receipts`, "POST", JSON.parse(document.getElementById("receiptBody").value)));
-  } catch (e) { Fresh2U.print("receiptOut", e.message); }
-};
-document.getElementById("handoverBtn").onclick = async () => {
-  try {
-    const id = document.getElementById("pickupHubId2").value;
-    Fresh2U.print("handoverOut", await Fresh2U.api(`/api/v1/pickup-hubs/${id}/handovers`, "POST", JSON.parse(document.getElementById("handoverBody").value)));
-  } catch (e) { Fresh2U.print("handoverOut", e.message); }
-};
-</script>
-</body></html>
+</body>
+</html>
+

@@ -36,13 +36,23 @@ final class Env
 
             $_ENV[$key] = $value;
             $_SERVER[$key] = $value;
-            putenv($key . '=' . $value);
+
+            // Some production servers disable putenv via disable_functions.
+            if (function_exists('putenv')) {
+                putenv($key . '=' . $value);
+            }
         }
     }
 
     public static function get(string $key, ?string $default = null): ?string
     {
-        $value = $_ENV[$key] ?? $_SERVER[$key] ?? getenv($key);
+        $value = $_ENV[$key] ?? $_SERVER[$key] ?? null;
+
+        if (($value === null || $value === '') && function_exists('getenv')) {
+            $envValue = getenv($key);
+            $value = ($envValue === false) ? null : $envValue;
+        }
+
         if ($value === false || $value === null || $value === '') {
             return $default;
         }

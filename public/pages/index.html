@@ -1,26 +1,55 @@
-<!doctype html>
-<html lang="en">
+﻿<!doctype html>
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Fresh2U Role Pages</title>
+  <title>Fresh2U UI Portal</title>
   <link rel="stylesheet" href="/assets/app.css" />
 </head>
-<body>
-  <main class="shell">
-    <section class="topbar">
-      <h1>Fresh2U API-First Role Portal</h1>
-      <p class="note">Headless frontend pages for each role. All business actions are API calls.</p>
-      <div class="role-nav">
-        <a href="/pages/customer.html">Customer</a>
-        <a href="/pages/leader.html">Leader</a>
-        <a href="/pages/merchant.html">Merchant</a>
-        <a href="/pages/pickup_hub.html">Pickup Hub</a>
-        <a href="/pages/driver.html">Driver</a>
-        <a href="/pages/supply_partner.html">Supply Partner</a>
-        <a href="/pages/admin.html">Admin</a>
-      </div>
+<body class="role-body">
+  <main class="hero">
+    <p class="kicker">Leader-First Collaborative Group Buying SaaS</p>
+    <h1>Fresh2U 全角色前端工作台</h1>
+    <p>这不是公开商城，而是团长驱动的协同履约系统。页面围绕 leader 归属、member_orders、leader_orders、wallet 三桶余额、充值审核、履约交接、结算台账与风控流程设计。</p>
+
+    <div class="btn-row" style="margin-top: 14px;">
+      <a class="btn" href="/pages/customer.html">进入 Customer 前台</a>
+      <a class="btn ghost" href="/pages/admin.html">进入 Admin 审核台</a>
+      <a class="btn ghost" href="/pages/design-system.html">查看 Design System</a>
+      <a class="btn ghost" href="/pages/states.html">查看状态页组件</a>
+    </div>
+
+    <section class="role-grid">
+      <a class="role-link" href="/pages/customer.html">
+        <h3>Customer</h3>
+        <p>团长首页、商品、确认订单、订单、钱包、充值、优惠券。</p>
+      </a>
+      <a class="role-link" href="/pages/leader.html">
+        <h3>Leader</h3>
+        <p>工作台、客户、代客下单、member_orders、leader_orders、佣金提现。</p>
+      </a>
+      <a class="role-link" href="/pages/merchant.html">
+        <h3>Merchant</h3>
+        <p>商品管理、团长订单、履约中心、结算中心、钱包提现。</p>
+      </a>
+      <a class="role-link" href="/pages/pickup_hub.html">
+        <h3>Pickup Hub</h3>
+        <p>到货确认、交接记录、收益核算、钱包明细。</p>
+      </a>
+      <a class="role-link" href="/pages/driver.html">
+        <h3>Driver</h3>
+        <p>任务列表、任务详情、提货送达确认、收益钱包。</p>
+      </a>
+      <a class="role-link" href="/pages/supply_partner.html">
+        <h3>Supply Partner</h3>
+        <p>应收、结算申请、提现、钱包流水。</p>
+      </a>
+      <a class="role-link" href="/pages/admin.html">
+        <h3>Admin</h3>
+        <p>用户角色、充值/提现审核、钱包流水、优惠券、结算风控。</p>
+      </a>
     </section>
   </main>
 </body>
 </html>
+

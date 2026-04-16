@@ -1,81 +1,132 @@
-<!doctype html>
-<html lang="en">
+﻿<!doctype html>
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Merchant Console</title>
+  <title>Merchant · Fresh2U</title>
   <link rel="stylesheet" href="/assets/app.css" />
 </head>
-<body>
-<main class="shell">
-  <section class="topbar">
-    <h1>Merchant Console</h1>
-    <div class="role-nav"><a href="/pages/index.html">All Roles</a></div>
-    <div class="controls">
-      <input id="authEmail" placeholder="email" value="merchant1@fresh2u.local" />
-      <input id="authPassword" type="password" value="pass123456" />
-      <input id="authTenant" placeholder="tenant merchant id" />
-      <button id="loginBtn">Login</button>
+<body class="role-body" data-role-page="true" data-default-view="dashboard">
+<div class="app-shell">
+  <aside class="side-rail">
+    <div class="brand">
+      <span class="brand-mark"><span class="mark-dot">F2</span>Fresh2U</span>
+      <span class="role-badge">merchant</span>
     </div>
-    <pre id="authOut" class="out"></pre>
-  </section>
+    <p class="rail-meta">商家视图关注商品供给、团长主交易订单、履约交接、结算过账与提现。</p>
+    <nav class="nav-scroll">
+      <button class="nav-item" data-nav-view="dashboard">仪表盘</button>
+      <button class="nav-item" data-nav-view="products">商品管理</button>
+      <button class="nav-item" data-nav-view="leader-orders">团长订单</button>
+      <button class="nav-item" data-nav-view="fulfillment">履约中心</button>
+      <button class="nav-item" data-nav-view="settlements">结算中心</button>
+      <button class="nav-item" data-nav-view="wallet">钱包</button>
+      <button class="nav-item" data-nav-view="withdrawals">提现</button>
+      <button class="nav-item" data-nav-view="states">状态页</button>
+      <a class="nav-item" style="text-decoration:none;" href="/pages/index.html">角色入口</a>
+    </nav>
+  </aside>
 
-  <section class="grid">
-    <article class="card">
-      <h2>Create Product</h2>
-      <textarea id="productBody">{"name":"Organic Cucumber","description":"Farm fresh","base_price":12.50}</textarea>
-      <button id="productBtn">POST /products</button>
-      <pre id="productOut" class="out"></pre>
-    </article>
+  <div class="workspace">
+    <header class="workspace-head">
+      <div class="head-main">
+        <p class="kicker">Merchant Control</p>
+        <h1 class="headline">商家运营与结算后台</h1>
+        <p class="head-desc">以 leader_orders 为主交易单，履约责任到 pickup_hub，后续交由 leader/driver 完成末端配送。</p>
+      </div>
+      <div class="kpi-grid">
+        <article class="kpi"><p class="kpi-label">今日 leader_orders</p><p class="kpi-value">14</p><p class="kpi-sub">主交易单</p></article>
+        <article class="kpi"><p class="kpi-label">待到仓确认</p><p class="kpi-value">6</p><p class="kpi-sub">merchant_fulfilled pending receipt</p></article>
+        <article class="kpi"><p class="kpi-label">待结算金额</p><p class="kpi-value">￥8,460</p><p class="kpi-sub">merchant_settlements pending</p></article>
+        <article class="kpi"><p class="kpi-label">提现中</p><p class="kpi-value">2 笔</p><p class="kpi-sub">frozen balance</p></article>
+      </div>
+    </header>
 
-    <article class="card">
-      <h2>Route Fulfillment</h2>
-      <input id="leaderOrderId" placeholder="leader_order_id" />
-      <textarea id="routeBody">{"pickup_hub_id":"","supply_partner_id":""}</textarea>
-      <button id="routeBtn">POST /leader-orders/{id}/route-fulfillment</button>
-      <pre id="routeOut" class="out"></pre>
-    </article>
+    <main class="panel-stack">
+      <section class="workspace-panel" data-view="dashboard">
+        <div class="panel-head"><h2 class="panel-title">仪表盘</h2><p class="panel-desc">订单、履约、结算、钱包四条主线统一可视。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>订单漏斗</h4><ul class="entity-list"><li class="entity-item"><div class="entity-main"><p class="entity-title">submitted</p><p class="entity-meta">待确认采购</p></div><span class="chip pending">5</span></li><li class="entity-item"><div class="entity-main"><p class="entity-title">in_fulfillment</p><p class="entity-meta">供应履约中</p></div><span class="chip warning">7</span></li><li class="entity-item"><div class="entity-main"><p class="entity-title">merchant_fulfilled</p><p class="entity-meta">已到 pickup_hub</p></div><span class="chip success">2</span></li></ul></article>
+          <article class="surface"><h4>财务信号</h4><ul class="entity-list"><li class="entity-item"><div class="entity-main"><p class="entity-title">coupon_discount_expense</p><p class="entity-meta">今日优惠让利</p></div><span class="chip neutral">￥432</span></li><li class="entity-item"><div class="entity-main"><p class="entity-title">merchant_settlement_payable</p><p class="entity-meta">待过账</p></div><span class="chip pending">￥3,280</span></li></ul></article>
+          <article class="surface"><h4>快捷入口</h4><div class="btn-row"><button class="btn ghost" data-nav-view="products">上新商品</button><button class="btn ghost" data-nav-view="fulfillment">履约推进</button><button class="btn ghost" data-nav-view="settlements">结算过账</button></div></article>
+        </div>
+      </section>
 
-    <article class="card">
-      <h2>Calculate Earnings</h2>
-      <textarea id="earnBody">{"leader_order_id":"","member_order_id":"","pickup_hub_id":"","delivery_task_id":"","driver_user_id":"","fulfillment_order_id":"","supply_partner_id":""}</textarea>
-      <button id="earnBtn">POST /earnings/calculate</button>
-      <pre id="earnOut" class="out"></pre>
-    </article>
+      <section class="workspace-panel" data-view="products">
+        <div class="panel-head"><h2 class="panel-title">商品管理</h2><p class="panel-desc">维护 products、specs，并供团长 campaign 选品。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>创建商品</h4><div class="form-grid"><textarea id="merchantCreateProduct">{"name":"Organic Leafy Bundle","description":"24h fresh","base_price":15.9}</textarea><div class="btn-row"><button class="btn" data-api-action data-method="POST" data-endpoint="/api/v1/products" data-input="#merchantCreateProduct" data-output="#merchantProductOut">创建商品</button><button class="btn ghost" data-api-action data-method="GET" data-endpoint="/api/v1/products" data-output="#merchantProductOut">拉取商品列表</button></div></div></article>
+          <article class="surface"><h4>上架策略</h4><p>商品仅通过团长 campaign 暴露到前台，防止“公开商城化”偏离业务模型。</p></article>
+        </div>
+        <pre id="merchantProductOut" class="api-console"></pre>
+      </section>
 
-    <article class="card">
-      <h2>Create Settlement</h2>
-      <textarea id="settleBody">{"owner_type":"merchant","owner_id":""}</textarea>
-      <button id="settleBtn">POST /settlements</button>
-      <pre id="settleOut" class="out"></pre>
-    </article>
-  </section>
-</main>
+      <section class="workspace-panel" data-view="leader-orders">
+        <div class="panel-head"><h2 class="panel-title">团长订单（leader_orders）</h2><p class="panel-desc">主交易订单管理：确认、路由 supply_partner、更新到仓状态。</p></div>
+        <div class="table-wrap"><table class="data-table"><thead><tr><th>leader_order</th><th>leader</th><th>status</th><th>pickup_hub</th><th>payable</th><th>操作</th></tr></thead><tbody><tr><td>LOR-1023</td><td>leader_003</td><td><span class="chip pending">submitted</span></td><td>hub_001</td><td>￥680.00</td><td><span class="chip neutral">确认</span></td></tr><tr><td>LOR-1021</td><td>leader_009</td><td><span class="chip warning">in_fulfillment</span></td><td>hub_004</td><td>￥1,120.00</td><td><span class="chip neutral">路由供应</span></td></tr></tbody></table></div>
+      </section>
+
+      <section class="workspace-panel" data-view="fulfillment">
+        <div class="panel-head"><h2 class="panel-title">履约中心</h2><p class="panel-desc">merchant_fulfillment_orders、pickup_hub_receipts、handover 链路追踪。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>路由履约</h4><div class="form-grid"><input id="merchantLeaderOrderId" placeholder="leader_order_id" /><textarea id="merchantRouteBody">{"pickup_hub_id":"20000000-0000-0000-0000-000000000001","supply_partner_id":"30000000-0000-0000-0000-000000000001","merchant_id":"10000000-0000-0000-0000-000000000001"}</textarea><div class="btn-row"><button class="btn" data-api-action data-method="POST" data-endpoint="/api/v1/leader-orders/{id}/route-fulfillment" data-path-input="#merchantLeaderOrderId" data-input="#merchantRouteBody" data-output="#merchantFulfillOut">创建履约单</button></div></div></article>
+          <article class="surface"><h4>商家责任边界</h4><p>当状态达到 merchant_fulfilled 且到达 pickup_hub，即商家履约完成，末端配送不再由商家负责。</p></article>
+        </div>
+        <pre id="merchantFulfillOut" class="api-console"></pre>
+      </section>
+
+      <section class="workspace-panel" data-view="settlements">
+        <div class="panel-head"><h2 class="panel-title">结算中心</h2><p class="panel-desc">earnings 计算 -> settlements 审核 -> post 生成 ledger_entries。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>计算收益</h4><div class="form-grid"><textarea id="merchantEarningBody">{"leader_order_id":"","member_order_id":"","pickup_hub_id":"20000000-0000-0000-0000-000000000001","delivery_task_id":"","driver_user_id":"00000000-0000-0000-0000-000000000006","fulfillment_order_id":"","supply_partner_id":"30000000-0000-0000-0000-000000000001"}</textarea><div class="btn-row"><button class="btn" data-api-action data-method="POST" data-endpoint="/api/v1/earnings/calculate" data-input="#merchantEarningBody" data-output="#merchantSettlementOut">计算收益</button></div></div></article>
+          <article class="surface"><h4>创建结算批次</h4><div class="form-grid"><textarea id="merchantSettlementBody">{"owner_type":"merchant","owner_id":"10000000-0000-0000-0000-000000000001"}</textarea><div class="btn-row"><button class="btn warn" data-api-action data-method="POST" data-endpoint="/api/v1/settlements" data-input="#merchantSettlementBody" data-output="#merchantSettlementOut">创建结算</button><button class="btn ghost" data-api-action data-method="GET" data-endpoint="/api/v1/ledger-entries" data-output="#merchantSettlementOut">查看台账</button></div></div></article>
+        </div>
+        <pre id="merchantSettlementOut" class="api-console"></pre>
+      </section>
+
+      <section class="workspace-panel" data-view="wallet">
+        <div class="panel-head"><h2 class="panel-title">商家钱包</h2><p class="panel-desc">结算入账后进入 withdrawable，提现会迁移到 frozen。</p></div>
+        <div class="bucket-grid">
+          <article class="bucket withdrawable"><h4>withdrawable_balance</h4><p>￥18,622.00</p><small>可提现营业收入</small></article>
+          <article class="bucket non-withdrawable"><h4>non_withdrawable_balance</h4><p>￥0.00</p><small>商家通常不使用该桶</small></article>
+          <article class="bucket frozen"><h4>frozen_balance</h4><p>￥2,300.00</p><small>提现审核中</small></article>
+        </div>
+      </section>
+
+      <section class="workspace-panel" data-view="withdrawals">
+        <div class="panel-head"><h2 class="panel-title">商家提现</h2><p class="panel-desc">提现申请生成 withdrawal_requests，审核后完成出账。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>发起提现申请</h4><div class="form-grid"><textarea id="merchantWithdrawBody">{"owner_type":"merchant","owner_id":"10000000-0000-0000-0000-000000000001","amount":500,"fee_amount":2,"account_name":"Fresh2U Merchant","account_no":"622233445566","account_type":"bank"}</textarea><div class="btn-row"><button class="btn warn" data-api-action data-method="POST" data-endpoint="/api/v1/withdrawals" data-input="#merchantWithdrawBody" data-output="#merchantWithdrawOut">提交提现</button></div></div></article>
+          <article class="surface"><h4>审核状态</h4><ul class="entity-list"><li class="entity-item"><div class="entity-main"><p class="entity-title">WDR-20260416-100</p><p class="entity-meta">￥500.00</p></div><span class="chip pending">pending_review</span></li></ul></article>
+        </div>
+        <pre id="merchantWithdrawOut" class="api-console"></pre>
+      </section>
+
+      <section class="workspace-panel" data-view="states">
+        <div class="panel-head"><h2 class="panel-title">状态页组件（Merchant）</h2><p class="panel-desc">面向审核和履约推进场景。</p></div>
+        <div class="state-grid">
+          <article class="state-card"><p class="state-title">loading</p><p class="state-note">正在同步 leader_orders ...</p><div class="loading-bar"></div></article>
+          <article class="state-card"><p class="state-title">empty</p><p class="state-note">暂无待处理团长订单。</p><span class="chip neutral" style="margin-top:8px;">empty</span></article>
+          <article class="state-card"><p class="state-title">error</p><p class="state-note">结算创建失败，请检查 owner_type/owner_id。</p><span class="chip error" style="margin-top:8px;">error</span></article>
+          <article class="state-card"><p class="state-title">success</p><p class="state-note">settlement 已 post，ledger_entries 已写入。</p><span class="chip success" style="margin-top:8px;">posted</span></article>
+          <article class="state-card"><p class="state-title">pending</p><p class="state-note">提现审核中，资金处于 frozen。</p><span class="chip pending" style="margin-top:8px;">pending</span></article>
+        </div>
+      </section>
+    </main>
+
+    <section class="auth-bar" style="margin-top:14px;">
+      <div class="auth-grid">
+        <input id="authEmail" value="merchant1@fresh2u.local" />
+        <input id="authPassword" type="password" value="pass123456" />
+        <input id="authTenant" value="10000000-0000-0000-0000-000000000001" />
+        <button class="btn" id="loginBtn">登录</button>
+      </div>
+      <p class="inline-note">当前用户：<strong data-auth-user>-</strong> | 角色：<strong data-auth-role>-</strong> | Token：<span data-auth-token>-</span></p>
+      <pre id="authOut" class="api-console"></pre>
+    </section>
+  </div>
+</div>
 <script src="/assets/app.js"></script>
-<script>
-Fresh2U.bindAuthPanel();
-
-document.getElementById("productBtn").onclick = async () => {
-  try { Fresh2U.print("productOut", await Fresh2U.api("/api/v1/products", "POST", JSON.parse(document.getElementById("productBody").value))); }
-  catch (e) { Fresh2U.print("productOut", e.message); }
-};
-
-document.getElementById("routeBtn").onclick = async () => {
-  try {
-    const id = document.getElementById("leaderOrderId").value;
-    Fresh2U.print("routeOut", await Fresh2U.api(`/api/v1/leader-orders/${id}/route-fulfillment`, "POST", JSON.parse(document.getElementById("routeBody").value)));
-  } catch (e) { Fresh2U.print("routeOut", e.message); }
-};
-
-document.getElementById("earnBtn").onclick = async () => {
-  try { Fresh2U.print("earnOut", await Fresh2U.api("/api/v1/earnings/calculate", "POST", JSON.parse(document.getElementById("earnBody").value))); }
-  catch (e) { Fresh2U.print("earnOut", e.message); }
-};
-
-document.getElementById("settleBtn").onclick = async () => {
-  try { Fresh2U.print("settleOut", await Fresh2U.api("/api/v1/settlements", "POST", JSON.parse(document.getElementById("settleBody").value))); }
-  catch (e) { Fresh2U.print("settleOut", e.message); }
-};
-</script>
 </body>
 </html>
+

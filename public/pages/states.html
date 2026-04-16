@@ -1,0 +1,80 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fresh2U 状态页</title>
+  <link rel="stylesheet" href="/assets/app.css" />
+</head>
+<body class="role-body" data-role-page="true" data-default-view="state-gallery">
+<div class="app-shell">
+  <aside class="side-rail">
+    <div class="brand">
+      <span class="brand-mark"><span class="mark-dot">F2</span>Fresh2U</span>
+      <span class="role-badge">Status</span>
+    </div>
+    <p class="rail-meta">Step 5：补齐 loading / empty / error / success / pending 状态页。</p>
+    <nav class="nav-scroll">
+      <button class="nav-item" data-nav-view="state-gallery">状态总览</button>
+      <button class="nav-item" data-nav-view="order-state">订单状态</button>
+      <button class="nav-item" data-nav-view="wallet-state">钱包状态</button>
+    </nav>
+  </aside>
+
+  <div class="workspace">
+    <header class="workspace-head">
+      <div class="head-main">
+        <p class="kicker">Step 5 · 状态页标准化</p>
+        <h1 class="headline">流程状态统一表达</h1>
+        <p class="head-desc">所有角色页面共享同一套状态组件，避免每个模块各自造状态样式。</p>
+      </div>
+      <div class="kpi-grid">
+        <article class="kpi"><p class="kpi-label">Loading</p><p class="kpi-value">异步中</p><p class="kpi-sub">骨架 + 进度条</p></article>
+        <article class="kpi"><p class="kpi-label">Empty</p><p class="kpi-value">无数据</p><p class="kpi-sub">下一步行动指引</p></article>
+        <article class="kpi"><p class="kpi-label">Error</p><p class="kpi-value">失败态</p><p class="kpi-sub">可重试 + 错误上下文</p></article>
+        <article class="kpi"><p class="kpi-label">Pending</p><p class="kpi-value">待处理</p><p class="kpi-sub">审核/结算/履约等待</p></article>
+      </div>
+    </header>
+
+    <main class="panel-stack">
+      <section class="workspace-panel" data-view="state-gallery">
+        <div class="panel-head"><h2 class="panel-title">状态总览</h2><p class="panel-desc">统一状态组件样式，跨角色复用。</p></div>
+        <div class="state-grid">
+          <article class="state-card"><p class="state-title">Loading</p><p class="state-note">正在拉取 member_orders 与 wallet_transactions...</p><div class="loading-bar"></div></article>
+          <article class="state-card"><p class="state-title">Empty</p><p class="state-note">暂无可用优惠券，请先领取或等待团长投放。</p><span class="chip neutral" style="margin-top:8px;">empty</span></article>
+          <article class="state-card"><p class="state-title">Error</p><p class="state-note">充值审核接口请求失败，请检查网络与 token。</p><span class="chip error" style="margin-top:8px;">retry needed</span></article>
+          <article class="state-card"><p class="state-title">Success</p><p class="state-note">结算已过账，钱包 withdrawable_balance 已更新。</p><span class="chip success" style="margin-top:8px;">posted</span></article>
+          <article class="state-card"><p class="state-title">Pending</p><p class="state-note">提现申请已冻结余额，等待 admin 审核。</p><span class="chip pending" style="margin-top:8px;">pending_review</span></article>
+        </div>
+      </section>
+
+      <section class="workspace-panel" data-view="order-state">
+        <div class="panel-head"><h2 class="panel-title">订单流程状态</h2><p class="panel-desc">member_orders 与 delivery_tasks 状态统一可视化。</p></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>流程节点</th><th>实体</th><th>状态</th><th>说明</th></tr></thead>
+            <tbody>
+              <tr><td>下单创建</td><td>member_orders</td><td><span class="chip pending">awaiting_payment</span></td><td>客户下单后待支付</td></tr>
+              <tr><td>团长合单</td><td>leader_orders</td><td><span class="chip pending">submitted</span></td><td>已归属 leader 并提交给 merchant</td></tr>
+              <tr><td>商家完成到仓</td><td>leader_orders</td><td><span class="chip warning">merchant_fulfilled</span></td><td>商家责任到 pickup hub</td></tr>
+              <tr><td>司机履约</td><td>delivery_tasks</td><td><span class="chip success">delivered</span></td><td>客户签收，最终业务完成</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="workspace-panel" data-view="wallet-state">
+        <div class="panel-head"><h2 class="panel-title">钱包与结算状态</h2><p class="panel-desc">提现冻结和结算过账前后状态分离。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>充值中</h4><p>recharge_orders.status = awaiting_payment / awaiting_review</p><span class="chip pending" style="margin-top:8px;">processing</span></article>
+          <article class="surface"><h4>提现中</h4><p>withdrawable -> frozen，withdrawal_requests = pending_review</p><span class="chip warning" style="margin-top:8px;">frozen</span></article>
+          <article class="surface"><h4>结算已过账</h4><p>settlements.state = posted，ledger_entries 已生成</p><span class="chip success" style="margin-top:8px;">settled</span></article>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<script src="/assets/app.js"></script>
+</body>
+</html>
+

@@ -1,83 +1,200 @@
-<!doctype html>
-<html lang="en">
+﻿<!doctype html>
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Customer Console</title>
+  <title>Customer · Fresh2U</title>
   <link rel="stylesheet" href="/assets/app.css" />
 </head>
-<body>
-<main class="shell">
-  <section class="topbar">
-    <h1>Customer Console</h1>
-    <div class="role-nav"><a href="/pages/index.html">All Roles</a></div>
-    <div class="controls">
-      <input id="authEmail" placeholder="email" value="customer1@fresh2u.local" />
-      <input id="authPassword" type="password" placeholder="password" value="pass123456" />
-      <input id="authTenant" placeholder="tenant merchant id" />
-      <button id="loginBtn">Login</button>
+<body class="role-body" data-role-page="true" data-default-view="leader-home">
+<div class="app-shell">
+  <aside class="side-rail">
+    <div class="brand">
+      <span class="brand-mark"><span class="mark-dot">F2</span>Fresh2U</span>
+      <span class="role-badge">customer</span>
     </div>
-    <pre id="authOut" class="out"></pre>
-  </section>
+    <p class="rail-meta">前台不是公开商城。客户必须绑定 leader，所有 member_orders 都归属团长。</p>
+    <nav class="nav-scroll">
+      <button class="nav-item" data-nav-view="leader-home">团长首页</button>
+      <button class="nav-item" data-nav-view="products">商品列表</button>
+      <button class="nav-item" data-nav-view="product-detail">商品详情</button>
+      <button class="nav-item" data-nav-view="confirm-order">确认订单</button>
+      <button class="nav-item" data-nav-view="order-list">订单列表</button>
+      <button class="nav-item" data-nav-view="wallet">钱包</button>
+      <button class="nav-item" data-nav-view="recharge">充值</button>
+      <button class="nav-item" data-nav-view="coupons">优惠券</button>
+      <button class="nav-item" data-nav-view="states">状态页</button>
+      <a class="nav-item" style="text-decoration:none;" href="/pages/index.html">角色入口</a>
+    </nav>
+  </aside>
 
-  <section class="grid">
-    <article class="card">
-      <h2>List Products</h2>
-      <button id="listProductsBtn">GET /products</button>
-      <pre id="productsOut" class="out"></pre>
-    </article>
+  <div class="workspace">
+    <header class="workspace-head">
+      <div class="head-main">
+        <p class="kicker">Customer App · Mobile First</p>
+        <h1 class="headline">团长带货前台</h1>
+        <p class="head-desc">以团长为中心展示商品与下单流程，订单支付支持钱包三桶余额与优惠券组合。</p>
+      </div>
+      <div class="kpi-grid">
+        <article class="kpi"><p class="kpi-label">绑定团长</p><p class="kpi-value">Leader #003</p><p class="kpi-sub">不可匿名下单</p></article>
+        <article class="kpi"><p class="kpi-label">待支付订单</p><p class="kpi-value">2</p><p class="kpi-sub">awaiting_payment</p></article>
+        <article class="kpi"><p class="kpi-label">可用优惠券</p><p class="kpi-value">5</p><p class="kpi-sub">one coupon per order</p></article>
+        <article class="kpi"><p class="kpi-label">钱包余额</p><p class="kpi-value">￥1,460.50</p><p class="kpi-sub">三桶余额可视化</p></article>
+      </div>
+    </header>
 
-    <article class="card">
-      <h2>Create Member Order</h2>
-      <textarea id="memberOrderBody">{"leader_user_id":"","items":[{"product_id":"","product_name":"Tomato","qty":2,"unit_price":18}]}</textarea>
-      <button id="createMemberOrderBtn">POST /member-orders</button>
-      <pre id="memberOrderOut" class="out"></pre>
-    </article>
+    <main class="panel-stack">
+      <section class="workspace-panel" data-view="leader-home">
+        <div class="panel-head">
+          <h2 class="panel-title">团长首页</h2>
+          <p class="panel-desc">展示绑定团长信息、团长推荐商品、团购档期。</p>
+        </div>
+        <div class="surface-grid">
+          <article class="surface">
+            <h4>我的团长</h4>
+            <ul class="entity-list">
+              <li class="entity-item"><div class="entity-main"><p class="entity-title">团长：李晨（leader_003）</p><p class="entity-meta">服务社区：Downtown · 客服在线 08:00-22:00</p></div><span class="chip success">bound</span></li>
+            </ul>
+          </article>
+          <article class="surface">
+            <h4>今日团购档期</h4>
+            <ul class="entity-list">
+              <li class="entity-item"><div class="entity-main"><p class="entity-title">早市蔬菜拼团</p><p class="entity-meta">截单 10:30 · 自提点 Central Hub</p></div><span class="chip pending">active</span></li>
+              <li class="entity-item"><div class="entity-main"><p class="entity-title">晚间水果拼团</p><p class="entity-meta">截单 17:00 · 次日配送</p></div><span class="chip neutral">scheduled</span></li>
+            </ul>
+          </article>
+          <article class="surface">
+            <h4>快捷操作</h4>
+            <div class="btn-row">
+              <button class="btn ghost" data-nav-view="products">浏览商品</button>
+              <button class="btn ghost" data-nav-view="order-list">查看订单</button>
+              <button class="btn ghost" data-nav-view="wallet">钱包余额</button>
+            </div>
+          </article>
+        </div>
+      </section>
 
-    <article class="card">
-      <h2>Pay Member Order</h2>
-      <input id="memberOrderId" placeholder="member_order_id" />
-      <button id="payMemberOrderBtn">POST /member-orders/{id}/pay</button>
-      <pre id="payOut" class="out"></pre>
-    </article>
+      <section class="workspace-panel" data-view="products">
+        <div class="panel-head"><h2 class="panel-title">商品列表（团长选品）</h2><p class="panel-desc">仅展示团长投放的 campaign 商品，不提供公开市场浏览。</p></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>商品</th><th>团长价</th><th>档期</th><th>库存</th><th>操作</th></tr></thead>
+            <tbody>
+              <tr><td>Organic Tomato Box 2kg</td><td>￥16.50</td><td>今天 09:00-10:30</td><td>132</td><td><span class="chip neutral">查看详情</span></td></tr>
+              <tr><td>Fresh Cucumber Pack 1.5kg</td><td>￥11.80</td><td>今天 09:00-10:30</td><td>98</td><td><span class="chip neutral">查看详情</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="surface" style="margin-top:10px;">
+          <h4>API 快捷</h4>
+          <div class="btn-row">
+            <button class="btn" data-api-action data-method="GET" data-endpoint="/api/v1/products" data-output="#customerApiOut">拉取商品</button>
+          </div>
+          <pre id="customerApiOut" class="api-console"></pre>
+        </div>
+      </section>
 
-    <article class="card">
-      <h2>Wallet</h2>
-      <input id="customerUserId" placeholder="customer_user_id" />
-      <button id="walletBtn">GET Wallet</button>
-      <pre id="walletOut" class="out"></pre>
-    </article>
-  </section>
-</main>
+      <section class="workspace-panel" data-view="product-detail">
+        <div class="panel-head"><h2 class="panel-title">商品详情</h2><p class="panel-desc">展示规格、团长说明、履约路径与优惠券适用规则。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>商品信息</h4><p>Organic Tomato Box（2kg）· 产地直供 · 当日冷链到达 pickup_hub。</p></article>
+          <article class="surface"><h4>团长推荐语</h4><p>适合家庭晚餐，今日团购价低于门店价 18%。</p></article>
+          <article class="surface"><h4>履约说明</h4><p>merchant 责任到自提点，最终配送由 leader/driver 完成。</p></article>
+        </div>
+      </section>
+
+      <section class="workspace-panel" data-view="confirm-order">
+        <div class="panel-head"><h2 class="panel-title">确认订单</h2><p class="panel-desc">先用优惠券，再扣钱包（non_withdrawable -> withdrawable），剩余可外部支付。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>订单清单</h4><ul class="entity-list"><li class="entity-item"><div class="entity-main"><p class="entity-title">Organic Tomato Box × 2</p><p class="entity-meta">￥16.50 × 2</p></div><span class="chip neutral">￥33.00</span></li></ul></article>
+          <article class="surface"><h4>支付分摊</h4><ul class="entity-list"><li class="entity-item"><div class="entity-main"><p class="entity-title">coupon discount</p><p class="entity-meta">新客券 15%</p></div><span class="chip success">-￥4.95</span></li><li class="entity-item"><div class="entity-main"><p class="entity-title">wallet non_withdrawable</p><p class="entity-meta">优先扣减</p></div><span class="chip pending">￥20.00</span></li><li class="entity-item"><div class="entity-main"><p class="entity-title">wallet withdrawable</p><p class="entity-meta">补足</p></div><span class="chip pending">￥8.05</span></li></ul></article>
+          <article class="surface"><h4>创建 member_order</h4><div class="form-grid"><textarea id="customerCreateOrderBody">{"customer_user_id":"00000000-0000-0000-0000-000000000004","leader_user_id":"00000000-0000-0000-0000-000000000003","items":[{"product_id":"60000000-0000-0000-0000-000000000001","product_name":"Organic Tomato Box","qty":2,"unit_price":16.5}]}</textarea><div class="btn-row"><button class="btn" data-api-action data-method="POST" data-endpoint="/api/v1/member-orders" data-input="#customerCreateOrderBody" data-output="#customerOrderOut">创建订单</button></div></div></article>
+        </div>
+        <pre id="customerOrderOut" class="api-console"></pre>
+      </section>
+
+      <section class="workspace-panel" data-view="order-list">
+        <div class="panel-head"><h2 class="panel-title">订单列表</h2><p class="panel-desc">member_orders 始终展示 leader 归属与支付/收款双状态。</p></div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>订单号</th><th>归属团长</th><th>订单状态</th><th>payment_status</th><th>collection_status</th><th>金额</th></tr></thead>
+            <tbody>
+              <tr><td>MOR-20260416-001</td><td>leader_003</td><td><span class="chip pending">awaiting_payment</span></td><td><span class="chip warning">unpaid</span></td><td><span class="chip neutral">not_collected</span></td><td>￥33.00</td></tr>
+              <tr><td>MOR-20260415-822</td><td>leader_003</td><td><span class="chip success">delivered</span></td><td><span class="chip success">paid</span></td><td><span class="chip pending">collected_offline</span></td><td>￥58.00</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="workspace-panel" data-view="wallet">
+        <div class="panel-head"><h2 class="panel-title">钱包</h2><p class="panel-desc">统一 wallet 三桶余额：withdrawable / non_withdrawable / frozen。</p></div>
+        <div class="bucket-grid">
+          <article class="bucket withdrawable"><h4>withdrawable_balance</h4><p>￥1,280.50</p><small>可提现或支付</small></article>
+          <article class="bucket non-withdrawable"><h4>non_withdrawable_balance</h4><p>￥180.00</p><small>平台奖励，优先用于支付</small></article>
+          <article class="bucket frozen"><h4>frozen_balance</h4><p>￥0.00</p><small>当前无冻结</small></article>
+        </div>
+        <div class="surface" style="margin-top:10px;">
+          <h4>钱包流水</h4>
+          <div class="btn-row"><button class="btn ghost" data-api-action data-method="GET" data-endpoint="/api/v1/wallets/customer/00000000-0000-0000-0000-000000000004/transactions" data-output="#customerWalletTx">获取流水</button></div>
+          <pre id="customerWalletTx" class="api-console"></pre>
+        </div>
+      </section>
+
+      <section class="workspace-panel" data-view="recharge">
+        <div class="panel-head"><h2 class="panel-title">充值</h2><p class="panel-desc">支持在线充值与现金充值单（有审核轨迹，不允许手改余额）。</p></div>
+        <div class="surface-grid">
+          <article class="surface">
+            <h4>在线充值</h4>
+            <div class="form-grid">
+              <textarea id="customerRechargeOnline">{"tenant_merchant_id":"10000000-0000-0000-0000-000000000001","customer_user_id":"00000000-0000-0000-0000-000000000004","recharge_amount":100,"bonus_amount":10}</textarea>
+              <div class="btn-row"><button class="btn" data-api-action data-method="POST" data-endpoint="/api/v1/recharges/online" data-input="#customerRechargeOnline" data-output="#customerRechargeOut">创建在线充值单</button></div>
+            </div>
+          </article>
+          <article class="surface">
+            <h4>现金充值（线下收款）</h4>
+            <div class="form-grid">
+              <textarea id="customerRechargeCash">{"tenant_merchant_id":"10000000-0000-0000-0000-000000000001","customer_user_id":"00000000-0000-0000-0000-000000000004","recharge_amount":50,"proof_note":"现金交团长"}</textarea>
+              <div class="btn-row"><button class="btn warn" data-api-action data-method="POST" data-endpoint="/api/v1/recharges/cash" data-input="#customerRechargeCash" data-output="#customerRechargeOut">创建现金充值单</button></div>
+            </div>
+          </article>
+        </div>
+        <pre id="customerRechargeOut" class="api-console"></pre>
+      </section>
+
+      <section class="workspace-panel" data-view="coupons">
+        <div class="panel-head"><h2 class="panel-title">优惠券</h2><p class="panel-desc">一单一券，支持满减/无门槛/折扣/新客券，且可审计。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>可用券</h4><ul class="entity-list"><li class="entity-item"><div class="entity-main"><p class="entity-title">新客 15% 折扣券</p><p class="entity-meta">coupon_type=percentage_discount</p></div><span class="chip success">可用</span></li><li class="entity-item"><div class="entity-main"><p class="entity-title">满50减10</p><p class="entity-meta">coupon_type=threshold_discount</p></div><span class="chip pending">可用</span></li></ul></article>
+          <article class="surface"><h4>API 快捷</h4><div class="btn-row"><button class="btn ghost" data-api-action data-method="GET" data-endpoint="/api/v1/coupons/available" data-output="#customerCouponOut">获取可用券</button></div></article>
+        </div>
+        <pre id="customerCouponOut" class="api-console"></pre>
+      </section>
+
+      <section class="workspace-panel" data-view="states">
+        <div class="panel-head"><h2 class="panel-title">状态页组件（Customer）</h2><p class="panel-desc">可复用至所有角色。</p></div>
+        <div class="state-grid">
+          <article class="state-card"><p class="state-title">loading</p><p class="state-note">正在加载团长推荐商品...</p><div class="loading-bar"></div></article>
+          <article class="state-card"><p class="state-title">empty</p><p class="state-note">暂无可配送时段，请稍后重试。</p><span class="chip neutral" style="margin-top:8px;">empty</span></article>
+          <article class="state-card"><p class="state-title">error</p><p class="state-note">支付失败，请重试或改用外部支付。</p><span class="chip error" style="margin-top:8px;">failed</span></article>
+          <article class="state-card"><p class="state-title">success</p><p class="state-note">订单支付成功，已归属到 leader。</p><span class="chip success" style="margin-top:8px;">paid</span></article>
+          <article class="state-card"><p class="state-title">pending</p><p class="state-note">现金充值单等待 merchant 审核。</p><span class="chip pending" style="margin-top:8px;">awaiting_review</span></article>
+        </div>
+      </section>
+    </main>
+
+    <section class="auth-bar" style="margin-top:14px;">
+      <div class="auth-grid">
+        <input id="authEmail" value="customer1@fresh2u.local" />
+        <input id="authPassword" type="password" value="pass123456" />
+        <input id="authTenant" value="10000000-0000-0000-0000-000000000001" />
+        <button class="btn" id="loginBtn">登录</button>
+      </div>
+      <p class="inline-note">当前用户：<strong data-auth-user>-</strong> | 角色：<strong data-auth-role>-</strong> | Token：<span data-auth-token>-</span></p>
+      <pre id="authOut" class="api-console"></pre>
+    </section>
+  </div>
+</div>
 <script src="/assets/app.js"></script>
-<script>
-  Fresh2U.bindAuthPanel();
-
-  document.getElementById("listProductsBtn").onclick = async () => {
-    try { Fresh2U.print("productsOut", await Fresh2U.api("/api/v1/products")); }
-    catch (e) { Fresh2U.print("productsOut", e.message); }
-  };
-
-  document.getElementById("createMemberOrderBtn").onclick = async () => {
-    try {
-      const body = JSON.parse(document.getElementById("memberOrderBody").value || "{}");
-      Fresh2U.print("memberOrderOut", await Fresh2U.api("/api/v1/member-orders", "POST", body));
-    } catch (e) { Fresh2U.print("memberOrderOut", e.message); }
-  };
-
-  document.getElementById("payMemberOrderBtn").onclick = async () => {
-    try {
-      const id = document.getElementById("memberOrderId").value;
-      Fresh2U.print("payOut", await Fresh2U.api(`/api/v1/member-orders/${id}/pay`, "POST", { settle_external: true }));
-    } catch (e) { Fresh2U.print("payOut", e.message); }
-  };
-
-  document.getElementById("walletBtn").onclick = async () => {
-    try {
-      const userId = document.getElementById("customerUserId").value;
-      Fresh2U.print("walletOut", await Fresh2U.api(`/api/v1/wallets/customer/${userId}`));
-    } catch (e) { Fresh2U.print("walletOut", e.message); }
-  };
-</script>
 </body>
 </html>
+

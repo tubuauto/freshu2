@@ -1,0 +1,121 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fresh2U Design System</title>
+  <link rel="stylesheet" href="/assets/app.css" />
+</head>
+<body class="role-body" data-role-page="true" data-default-view="foundation">
+<div class="app-shell">
+  <aside class="side-rail">
+    <div class="brand">
+      <span class="brand-mark"><span class="mark-dot">F2</span>Fresh2U</span>
+      <span class="role-badge">Design System</span>
+    </div>
+    <p class="rail-meta">统一 tokens / 组件 / 状态 / 信息结构，确保 mobile first + desktop SaaS 一致体验。</p>
+    <nav class="nav-scroll">
+      <button class="nav-item" data-nav-view="foundation">Foundation</button>
+      <button class="nav-item" data-nav-view="layout">Layout</button>
+      <button class="nav-item" data-nav-view="components">Components</button>
+      <button class="nav-item" data-nav-view="entities">Entity Blocks</button>
+      <button class="nav-item" data-nav-view="api">API Console</button>
+    </nav>
+  </aside>
+
+  <div class="workspace">
+    <header class="workspace-head">
+      <div class="head-main">
+        <p class="kicker">Step 1 · 统一设计系统</p>
+        <h1 class="headline">Fresh2U Design System</h1>
+        <p class="head-desc">浅色、现代、专业；前台操作简洁，后台审核密度高；所有页面围绕钱包三桶、订单归属、结算状态、履约节点展开。</p>
+      </div>
+      <div class="kpi-grid">
+        <article class="kpi"><p class="kpi-label">Palette</p><p class="kpi-value">Light Pro</p><p class="kpi-sub">绿系主色 + 橙色告警</p></article>
+        <article class="kpi"><p class="kpi-label">Typography</p><p class="kpi-value">2 Fonts</p><p class="kpi-sub">Plus Jakarta + Noto Sans SC</p></article>
+        <article class="kpi"><p class="kpi-label">State Set</p><p class="kpi-value">5</p><p class="kpi-sub">loading / empty / error / success / pending</p></article>
+        <article class="kpi"><p class="kpi-label">Role Scope</p><p class="kpi-value">7</p><p class="kpi-sub">customer 到 admin 全覆盖</p></article>
+      </div>
+    </header>
+
+    <main class="panel-stack">
+      <section class="workspace-panel" data-view="foundation">
+        <div class="panel-head">
+          <h2 class="panel-title">Foundation Tokens</h2>
+          <p class="panel-desc">颜色、圆角、阴影、间距全部 token 化，便于维护与扩展。</p>
+        </div>
+        <div class="surface-grid">
+          <article class="surface"><h4>Color Token</h4><p>`--accent` 驱动主按钮与激活态，`--warn` 用于待处理与风险提示，`--error` 仅用于失败状态。</p></article>
+          <article class="surface"><h4>Radius & Shadow</h4><p>移动端圆角偏大（14~24），桌面保持轻阴影，避免厚重“卡片墙”。</p></article>
+          <article class="surface"><h4>Typography Scale</h4><p>Headline 强层级，正文与标签保持高可读，数字信息优先显著展示。</p></article>
+        </div>
+      </section>
+
+      <section class="workspace-panel" data-view="layout">
+        <div class="panel-head">
+          <h2 class="panel-title">Layout System</h2>
+          <p class="panel-desc">mobile first：横向滚动导航 + 单列工作区；desktop：左侧导航 + 高密度操作面板。</p>
+        </div>
+        <div class="surface-grid">
+          <article class="surface"><h4>Mobile</h4><p>顶部 sticky 导航胶囊，拇指快速切换业务视图。</p></article>
+          <article class="surface"><h4>Desktop</h4><p>固定侧栏导航，主区域显示 KPI、表格、审批动作，接近成熟 SaaS 操作心智。</p></article>
+          <article class="surface"><h4>View Switch</h4><p>所有业务页统一使用 `data-nav-view` + `data-view` 控制面板切换。</p></article>
+        </div>
+      </section>
+
+      <section class="workspace-panel" data-view="components">
+        <div class="panel-head">
+          <h2 class="panel-title">Core Components</h2>
+          <p class="panel-desc">统一 chips / tables / bucket cards / API console。</p>
+        </div>
+        <div class="surface-grid">
+          <article class="surface"><h4>Status Chips</h4><div class="btn-row"><span class="chip pending">pending</span><span class="chip success">success</span><span class="chip warning">warning</span><span class="chip error">error</span><span class="chip neutral">neutral</span></div></article>
+          <article class="surface"><h4>Wallet Buckets</h4><div class="bucket-grid"><div class="bucket withdrawable"><h4>withdrawable</h4><p>￥1,280.50</p><small>可提现余额</small></div><div class="bucket non-withdrawable"><h4>non_withdrawable</h4><p>￥180.00</p><small>补贴/奖励余额</small></div><div class="bucket frozen"><h4>frozen</h4><p>￥420.00</p><small>提现/风控冻结</small></div></div></article>
+          <article class="surface"><h4>Data Table</h4><div class="table-wrap"><table class="data-table"><thead><tr><th>Entity</th><th>Status</th><th>Owner</th><th>Updated</th></tr></thead><tbody><tr><td>member_orders</td><td><span class="chip pending">awaiting_payment</span></td><td>leader_003</td><td>2m ago</td></tr><tr><td>withdrawal_requests</td><td><span class="chip warning">pending_review</span></td><td>admin</td><td>10m ago</td></tr></tbody></table></div></article>
+        </div>
+      </section>
+
+      <section class="workspace-panel" data-view="entities">
+        <div class="panel-head">
+          <h2 class="panel-title">Entity-Aligned Blocks</h2>
+          <p class="panel-desc">页面围绕后端实体：member_orders / leader_orders / wallets / settlements / delivery_tasks。</p>
+        </div>
+        <ul class="entity-list">
+          <li class="entity-item"><div class="entity-main"><p class="entity-title">member_orders</p><p class="entity-meta">customer 下单 + leader 归属 + payment/collection 状态双轨</p></div><span class="chip pending">stateful</span></li>
+          <li class="entity-item"><div class="entity-main"><p class="entity-title">wallet_transactions</p><p class="entity-meta">所有余额变化必须入流水，禁止 invisible mutate</p></div><span class="chip success">auditable</span></li>
+          <li class="entity-item"><div class="entity-main"><p class="entity-title">settlements + ledger_entries</p><p class="entity-meta">先结算后入账，再可提现</p></div><span class="chip warning">gated</span></li>
+        </ul>
+      </section>
+
+      <section class="workspace-panel" data-view="api">
+        <div class="panel-head">
+          <h2 class="panel-title">API Quick Console</h2>
+          <p class="panel-desc">用于验收 UI 与后端实体一致性。</p>
+        </div>
+        <div class="auth-bar">
+          <div class="auth-grid">
+            <input id="authEmail" value="admin@fresh2u.local" />
+            <input id="authPassword" type="password" value="pass123456" />
+            <input id="authTenant" placeholder="tenant_merchant_id" value="10000000-0000-0000-0000-000000000001" />
+            <button class="btn" id="loginBtn">登录</button>
+          </div>
+          <p class="inline-note">当前用户：<strong data-auth-user>-</strong> | 角色：<strong data-auth-role>-</strong> | Token：<span data-auth-token>-</span></p>
+          <pre id="authOut" class="api-console"></pre>
+        </div>
+
+        <div class="surface" style="margin-top: 10px;">
+          <h4>Ledger Entries</h4>
+          <div class="btn-row">
+            <button class="btn ghost" data-api-action data-method="GET" data-endpoint="/api/v1/ledger-entries" data-output="#apiOut">获取台账</button>
+            <button class="btn ghost" data-api-action data-method="GET" data-endpoint="/api/v1/products" data-output="#apiOut">获取商品</button>
+          </div>
+          <pre id="apiOut" class="api-console"></pre>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<script src="/assets/app.js"></script>
+</body>
+</html>
+

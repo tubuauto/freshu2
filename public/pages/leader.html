@@ -1,69 +1,134 @@
-<!doctype html>
-<html lang="en">
+﻿<!doctype html>
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Leader Console</title>
+  <title>Leader · Fresh2U</title>
   <link rel="stylesheet" href="/assets/app.css" />
 </head>
-<body>
-<main class="shell">
-  <section class="topbar">
-    <h1>Leader Console</h1>
-    <div class="role-nav"><a href="/pages/index.html">All Roles</a></div>
-    <div class="controls">
-      <input id="authEmail" placeholder="email" value="leader1@fresh2u.local" />
-      <input id="authPassword" type="password" placeholder="password" value="pass123456" />
-      <input id="authTenant" placeholder="tenant merchant id" />
-      <button id="loginBtn">Login</button>
+<body class="role-body" data-role-page="true" data-default-view="workspace">
+<div class="app-shell">
+  <aside class="side-rail">
+    <div class="brand">
+      <span class="brand-mark"><span class="mark-dot">F2</span>Fresh2U</span>
+      <span class="role-badge">leader</span>
     </div>
-    <pre id="authOut" class="out"></pre>
-  </section>
+    <p class="rail-meta">Leader 是前台核心销售角色，member_orders 与 leader_orders 都围绕团长协同。</p>
+    <nav class="nav-scroll">
+      <button class="nav-item" data-nav-view="workspace">工作台</button>
+      <button class="nav-item" data-nav-view="customers">客户列表</button>
+      <button class="nav-item" data-nav-view="assisted-order">代客下单</button>
+      <button class="nav-item" data-nav-view="member-orders">member_orders</button>
+      <button class="nav-item" data-nav-view="leader-orders">leader_orders</button>
+      <button class="nav-item" data-nav-view="wallet">钱包</button>
+      <button class="nav-item" data-nav-view="commissions">佣金</button>
+      <button class="nav-item" data-nav-view="withdrawals">提现</button>
+      <button class="nav-item" data-nav-view="states">状态页</button>
+      <a class="nav-item" style="text-decoration:none;" href="/pages/index.html">角色入口</a>
+    </nav>
+  </aside>
 
-  <section class="grid">
-    <article class="card">
-      <h2>Create Campaign</h2>
-      <textarea id="campaignBody">{"product_id":"","campaign_title":"Morning Vegetable Pack","campaign_price":15.80}</textarea>
-      <button id="campaignBtn">POST /campaigns</button>
-      <pre id="campaignOut" class="out"></pre>
-    </article>
+  <div class="workspace">
+    <header class="workspace-head">
+      <div class="head-main">
+        <p class="kicker">Leader Workspace</p>
+        <h1 class="headline">团长运营中心</h1>
+        <p class="head-desc">从客户管理、代客下单、合单采购到配送协同，全流程在 leader 视角闭环。</p>
+      </div>
+      <div class="kpi-grid">
+        <article class="kpi"><p class="kpi-label">今日客户订单</p><p class="kpi-value">26</p><p class="kpi-sub">member_orders</p></article>
+        <article class="kpi"><p class="kpi-label">待合单</p><p class="kpi-value">8</p><p class="kpi-sub">awaiting consolidation</p></article>
+        <article class="kpi"><p class="kpi-label">今日佣金</p><p class="kpi-value">￥428.00</p><p class="kpi-sub">pending settlement</p></article>
+        <article class="kpi"><p class="kpi-label">配送任务</p><p class="kpi-value">11</p><p class="kpi-sub">leader_self + driver</p></article>
+      </div>
+    </header>
 
-    <article class="card">
-      <h2>Consolidate Leader Order</h2>
-      <textarea id="consolidateBody">{"member_order_ids":[],"pickup_hub_id":""}</textarea>
-      <button id="consolidateBtn">POST /leader-orders/consolidate</button>
-      <pre id="consolidateOut" class="out"></pre>
-    </article>
+    <main class="panel-stack">
+      <section class="workspace-panel" data-view="workspace">
+        <div class="panel-head"><h2 class="panel-title">工作台总览</h2><p class="panel-desc">跨模块运营视图：客户活跃、待处理订单、履约进度、收益状态。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>今日待办</h4><ul class="entity-list"><li class="entity-item"><div class="entity-main"><p class="entity-title">待支付 member_orders</p><p class="entity-meta">提醒客户完成钱包/外部支付</p></div><span class="chip pending">6</span></li><li class="entity-item"><div class="entity-main"><p class="entity-title">待提交 leader_order</p><p class="entity-meta">合单后提交 merchant</p></div><span class="chip warning">2</span></li></ul></article>
+          <article class="surface"><h4>履约节奏</h4><ul class="entity-list"><li class="entity-item"><div class="entity-main"><p class="entity-title">已到 pickup_hub</p><p class="entity-meta">等待交接司机</p></div><span class="chip pending">4</span></li><li class="entity-item"><div class="entity-main"><p class="entity-title">配送中</p><p class="entity-meta">delivery_tasks.out_for_delivery</p></div><span class="chip success">7</span></li></ul></article>
+          <article class="surface"><h4>快捷操作</h4><div class="btn-row"><button class="btn ghost" data-nav-view="assisted-order">代客下单</button><button class="btn ghost" data-nav-view="leader-orders">合单采购</button><button class="btn ghost" data-nav-view="withdrawals">提现申请</button></div></article>
+        </div>
+      </section>
 
-    <article class="card">
-      <h2>Create Delivery Task</h2>
-      <textarea id="deliveryBody">{"member_order_id":"","leader_order_id":"","pickup_hub_id":"","driver_user_id":"","driver_type":"leader_self"}</textarea>
-      <button id="deliveryBtn">POST /delivery-tasks</button>
-      <pre id="deliveryOut" class="out"></pre>
-    </article>
-  </section>
-</main>
+      <section class="workspace-panel" data-view="customers">
+        <div class="panel-head"><h2 class="panel-title">客户列表</h2><p class="panel-desc">仅展示绑定本团长客户，支持代客录单与收款标记。</p></div>
+        <div class="table-wrap"><table class="data-table"><thead><tr><th>客户</th><th>绑定状态</th><th>近期订单</th><th>收款偏好</th><th>操作</th></tr></thead><tbody><tr><td>customer_004 / 张三</td><td><span class="chip success">bound</span></td><td>3</td><td>wallet + coupon</td><td><span class="chip neutral">代下单</span></td></tr><tr><td>customer_018 / 李四</td><td><span class="chip success">bound</span></td><td>1</td><td>offline collection</td><td><span class="chip neutral">录收款</span></td></tr></tbody></table></div>
+      </section>
+
+      <section class="workspace-panel" data-view="assisted-order">
+        <div class="panel-head"><h2 class="panel-title">代客下单</h2><p class="panel-desc">leader 代客户创建 member_order，仍保留 leader 归属与支付信息。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>创建 member_order</h4><div class="form-grid"><textarea id="leaderCreateMemberOrder">{"customer_user_id":"00000000-0000-0000-0000-000000000004","leader_user_id":"00000000-0000-0000-0000-000000000003","items":[{"product_id":"60000000-0000-0000-0000-000000000001","product_name":"Organic Tomato Box","qty":3,"unit_price":16.5}]}</textarea><div class="btn-row"><button class="btn" data-api-action data-method="POST" data-endpoint="/api/v1/member-orders" data-input="#leaderCreateMemberOrder" data-output="#leaderOrderOut">代客创建</button></div></div></article>
+          <article class="surface"><h4>收款记录（非平台支付）</h4><p>collection_status 与 payment_status 分离，支持线下代收记录审计。</p></article>
+        </div>
+        <pre id="leaderOrderOut" class="api-console"></pre>
+      </section>
+
+      <section class="workspace-panel" data-view="member-orders">
+        <div class="panel-head"><h2 class="panel-title">member_orders</h2><p class="panel-desc">团长维度查看客户订单，跟踪 payment + collection 双状态。</p></div>
+        <div class="table-wrap"><table class="data-table"><thead><tr><th>member_order</th><th>customer</th><th>payment_status</th><th>collection_status</th><th>leader_order</th><th>金额</th></tr></thead><tbody><tr><td>MOR-001</td><td>customer_004</td><td><span class="chip pending">partially_paid</span></td><td><span class="chip warning">pending_offline_collection</span></td><td>-</td><td>￥66.00</td></tr><tr><td>MOR-002</td><td>customer_018</td><td><span class="chip success">paid</span></td><td><span class="chip success">collected_offline</span></td><td>LOR-200</td><td>￥58.00</td></tr></tbody></table></div>
+      </section>
+
+      <section class="workspace-panel" data-view="leader-orders">
+        <div class="panel-head"><h2 class="panel-title">leader_orders</h2><p class="panel-desc">主交易订单：团长合单后提交给 merchant 进入履约。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>合单提交</h4><div class="form-grid"><textarea id="leaderConsolidate">{"member_order_ids":[],"pickup_hub_id":"20000000-0000-0000-0000-000000000001","merchant_id":"10000000-0000-0000-0000-000000000001","leader_user_id":"00000000-0000-0000-0000-000000000003"}</textarea><div class="btn-row"><button class="btn" data-api-action data-method="POST" data-endpoint="/api/v1/leader-orders/consolidate" data-input="#leaderConsolidate" data-output="#leaderConsolidateOut">创建 leader_order</button></div></div></article>
+          <article class="surface"><h4>状态流转</h4><ul class="entity-list"><li class="entity-item"><div class="entity-main"><p class="entity-title">submitted -> confirmed -> routed_to_supply_partner</p><p class="entity-meta">由 merchant/fulfillment 推进</p></div><span class="chip pending">in_flow</span></li><li class="entity-item"><div class="entity-main"><p class="entity-title">merchant_fulfilled</p><p class="entity-meta">商家责任到 pickup_hub 截止</p></div><span class="chip warning">handover</span></li></ul></article>
+        </div>
+        <pre id="leaderConsolidateOut" class="api-console"></pre>
+      </section>
+
+      <section class="workspace-panel" data-view="wallet">
+        <div class="panel-head"><h2 class="panel-title">团长钱包</h2><p class="panel-desc">佣金/团队奖励入账后进入 withdrawable，可发起提现。</p></div>
+        <div class="bucket-grid">
+          <article class="bucket withdrawable"><h4>withdrawable_balance</h4><p>￥2,126.80</p><small>已结算可提现</small></article>
+          <article class="bucket non-withdrawable"><h4>non_withdrawable_balance</h4><p>￥75.00</p><small>平台激励余额</small></article>
+          <article class="bucket frozen"><h4>frozen_balance</h4><p>￥320.00</p><small>提现审核中</small></article>
+        </div>
+      </section>
+
+      <section class="workspace-panel" data-view="commissions">
+        <div class="panel-head"><h2 class="panel-title">佣金与团队奖励</h2><p class="panel-desc">pending earnings 先入 commissions 表，settled 后才进入钱包。</p></div>
+        <div class="table-wrap"><table class="data-table"><thead><tr><th>来源订单</th><th>类型</th><th>金额</th><th>状态</th><th>结算时间</th></tr></thead><tbody><tr><td>MOR-1002</td><td>commission</td><td>￥38.20</td><td><span class="chip pending">pending</span></td><td>-</td></tr><tr><td>MOR-0998</td><td>team_reward</td><td>￥26.00</td><td><span class="chip success">settled</span></td><td>2026-04-16 09:20</td></tr></tbody></table></div>
+      </section>
+
+      <section class="workspace-panel" data-view="withdrawals">
+        <div class="panel-head"><h2 class="panel-title">提现</h2><p class="panel-desc">提现申请先冻结余额，审核通过后完成出账。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>发起提现</h4><div class="form-grid"><textarea id="leaderWithdraw">{"owner_type":"leader","owner_id":"00000000-0000-0000-0000-000000000003","amount":100,"fee_amount":1,"account_name":"Leader One","account_no":"6222000000000000","account_type":"bank"}</textarea><div class="btn-row"><button class="btn warn" data-api-action data-method="POST" data-endpoint="/api/v1/withdrawals" data-input="#leaderWithdraw" data-output="#leaderWithdrawOut">提交提现</button></div></div></article>
+          <article class="surface"><h4>当前状态</h4><ul class="entity-list"><li class="entity-item"><div class="entity-main"><p class="entity-title">WDR-20260416-001</p><p class="entity-meta">amount: ￥100.00 -> frozen</p></div><span class="chip pending">pending_review</span></li></ul></article>
+        </div>
+        <pre id="leaderWithdrawOut" class="api-console"></pre>
+      </section>
+
+      <section class="workspace-panel" data-view="states">
+        <div class="panel-head"><h2 class="panel-title">状态页组件（Leader）</h2><p class="panel-desc">用于审核与流程可视化。</p></div>
+        <div class="state-grid">
+          <article class="state-card"><p class="state-title">loading</p><p class="state-note">正在汇总 leader_orders...</p><div class="loading-bar"></div></article>
+          <article class="state-card"><p class="state-title">empty</p><p class="state-note">暂无可合单 member_orders。</p><span class="chip neutral" style="margin-top:8px;">empty</span></article>
+          <article class="state-card"><p class="state-title">error</p><p class="state-note">提交合单失败，请检查 member_order_ids。</p><span class="chip error" style="margin-top:8px;">error</span></article>
+          <article class="state-card"><p class="state-title">success</p><p class="state-note">leader_order 创建成功并已提交 merchant。</p><span class="chip success" style="margin-top:8px;">success</span></article>
+          <article class="state-card"><p class="state-title">pending</p><p class="state-note">提现申请审核中，余额冻结。</p><span class="chip pending" style="margin-top:8px;">pending</span></article>
+        </div>
+      </section>
+    </main>
+
+    <section class="auth-bar" style="margin-top:14px;">
+      <div class="auth-grid">
+        <input id="authEmail" value="leader1@fresh2u.local" />
+        <input id="authPassword" type="password" value="pass123456" />
+        <input id="authTenant" value="10000000-0000-0000-0000-000000000001" />
+        <button class="btn" id="loginBtn">登录</button>
+      </div>
+      <p class="inline-note">当前用户：<strong data-auth-user>-</strong> | 角色：<strong data-auth-role>-</strong> | Token：<span data-auth-token>-</span></p>
+      <pre id="authOut" class="api-console"></pre>
+    </section>
+  </div>
+</div>
 <script src="/assets/app.js"></script>
-<script>
-Fresh2U.bindAuthPanel();
-
-document.getElementById("campaignBtn").onclick = async () => {
-  try {
-    Fresh2U.print("campaignOut", await Fresh2U.api("/api/v1/campaigns", "POST", JSON.parse(document.getElementById("campaignBody").value)));
-  } catch (e) { Fresh2U.print("campaignOut", e.message); }
-};
-
-document.getElementById("consolidateBtn").onclick = async () => {
-  try {
-    Fresh2U.print("consolidateOut", await Fresh2U.api("/api/v1/leader-orders/consolidate", "POST", JSON.parse(document.getElementById("consolidateBody").value)));
-  } catch (e) { Fresh2U.print("consolidateOut", e.message); }
-};
-
-document.getElementById("deliveryBtn").onclick = async () => {
-  try {
-    Fresh2U.print("deliveryOut", await Fresh2U.api("/api/v1/delivery-tasks", "POST", JSON.parse(document.getElementById("deliveryBody").value)));
-  } catch (e) { Fresh2U.print("deliveryOut", e.message); }
-};
-</script>
 </body>
 </html>
+

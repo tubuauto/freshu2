@@ -1,56 +1,121 @@
-<!doctype html>
-<html lang="en"><head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Driver Console</title>
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Driver · Fresh2U</title>
   <link rel="stylesheet" href="/assets/app.css" />
 </head>
-<body><main class="shell">
-  <section class="topbar">
-    <h1>Driver Console</h1>
-    <div class="role-nav"><a href="/pages/index.html">All Roles</a></div>
-    <div class="controls">
-      <input id="authEmail" value="driver1@fresh2u.local" />
-      <input id="authPassword" type="password" value="pass123456" />
-      <input id="authTenant" placeholder="tenant merchant id" />
-      <button id="loginBtn">Login</button>
+<body class="role-body" data-role-page="true" data-default-view="tasks">
+<div class="app-shell">
+  <aside class="side-rail">
+    <div class="brand">
+      <span class="brand-mark"><span class="mark-dot">F2</span>Fresh2U</span>
+      <span class="role-badge">driver</span>
     </div>
-    <pre id="authOut" class="out"></pre>
-  </section>
+    <p class="rail-meta">司机视图聚焦 delivery_tasks：接单、提货、送达确认与收益同步。</p>
+    <nav class="nav-scroll">
+      <button class="nav-item" data-nav-view="tasks">任务列表</button>
+      <button class="nav-item" data-nav-view="task-detail">任务详情</button>
+      <button class="nav-item" data-nav-view="pickup-confirm">提货确认</button>
+      <button class="nav-item" data-nav-view="delivery-confirm">送达确认</button>
+      <button class="nav-item" data-nav-view="earnings">收益</button>
+      <button class="nav-item" data-nav-view="wallet">钱包</button>
+      <button class="nav-item" data-nav-view="states">状态页</button>
+      <a class="nav-item" style="text-decoration:none;" href="/pages/index.html">角色入口</a>
+    </nav>
+  </aside>
 
-  <section class="grid">
-    <article class="card">
-      <h2>Update Delivery Status</h2>
-      <input id="taskId" placeholder="delivery_task_id" />
-      <select id="taskStatus">
-        <option>accepted</option><option>picked_up</option><option>out_for_delivery</option><option>delivered</option><option>failed</option>
-      </select>
-      <button id="taskBtn">POST /delivery-tasks/{id}/status</button>
-      <pre id="taskOut" class="out"></pre>
-    </article>
+  <div class="workspace">
+    <header class="workspace-head">
+      <div class="head-main">
+        <p class="kicker">Driver Dispatch App</p>
+        <h1 class="headline">配送任务执行台</h1>
+        <p class="head-desc">任务流转：assigned -> accepted -> picked_up -> out_for_delivery -> delivered，异常可反馈 failed。</p>
+      </div>
+      <div class="kpi-grid">
+        <article class="kpi"><p class="kpi-label">今日待接单</p><p class="kpi-value">3</p><p class="kpi-sub">assigned</p></article>
+        <article class="kpi"><p class="kpi-label">配送中</p><p class="kpi-value">5</p><p class="kpi-sub">out_for_delivery</p></article>
+        <article class="kpi"><p class="kpi-label">今日完成</p><p class="kpi-value">11</p><p class="kpi-sub">delivered</p></article>
+        <article class="kpi"><p class="kpi-label">待结算收益</p><p class="kpi-value">￥268</p><p class="kpi-sub">delivery_fee_earnings</p></article>
+      </div>
+    </header>
 
-    <article class="card">
-      <h2>Driver Wallet</h2>
-      <input id="driverOwnerId" placeholder="driver user id" />
-      <button id="walletBtn">GET Wallet</button>
-      <pre id="walletOut" class="out"></pre>
-    </article>
-  </section>
-</main>
+    <main class="panel-stack">
+      <section class="workspace-panel" data-view="tasks">
+        <div class="panel-head"><h2 class="panel-title">任务列表</h2><p class="panel-desc">移动端优先展示状态、地址、时效和一键动作。</p></div>
+        <ul class="entity-list">
+          <li class="entity-item"><div class="entity-main"><p class="entity-title">TASK-601 · customer_004</p><p class="entity-meta">pickup_hub: Central Hub · 需 11:00 前送达</p></div><span class="chip pending">assigned</span></li>
+          <li class="entity-item"><div class="entity-main"><p class="entity-title">TASK-597 · customer_018</p><p class="entity-meta">已提货，配送中</p></div><span class="chip warning">out_for_delivery</span></li>
+        </ul>
+      </section>
+
+      <section class="workspace-panel" data-view="task-detail">
+        <div class="panel-head"><h2 class="panel-title">任务详情</h2><p class="panel-desc">关联 leader_order、member_order、交接记录与客户信息。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>任务信息</h4><p>delivery_task_id: TASK-601<br/>leader_order_id: LOR-1023<br/>member_order_id: MOR-20260416-001</p></article>
+          <article class="surface"><h4>提货信息</h4><p>pickup_hub: Central Hub<br/>handover receipt: REC-1001<br/>handover_to_type: independent_driver</p></article>
+          <article class="surface"><h4>客户信息</h4><p>客户：张三（customer_004）<br/>地址：No.1 Sample Street<br/>联系电话：已脱敏展示</p></article>
+        </div>
+      </section>
+
+      <section class="workspace-panel" data-view="pickup-confirm">
+        <div class="panel-head"><h2 class="panel-title">提货确认</h2><p class="panel-desc">司机确认从 pickup_hub 提货，任务状态进入 picked_up。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>更新任务状态</h4><div class="form-grid"><input id="driverTaskIdPickup" placeholder="delivery_task_id" /><div class="btn-row"><button class="btn" data-api-action data-method="POST" data-endpoint="/api/v1/delivery-tasks/{id}/status" data-path-input="#driverTaskIdPickup" data-input="#driverPickedUpBody" data-output="#driverActionOut">确认提货</button></div><textarea id="driverPickedUpBody">{"status":"picked_up"}</textarea></div></article>
+          <article class="surface"><h4>校验点</h4><p>确认货物数量、温控状态、交接单签名后再提交。</p></article>
+        </div>
+        <pre id="driverActionOut" class="api-console"></pre>
+      </section>
+
+      <section class="workspace-panel" data-view="delivery-confirm">
+        <div class="panel-head"><h2 class="panel-title">送达确认</h2><p class="panel-desc">送达后更新 delivered，member_order 自动进入 delivered。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>完成送达</h4><div class="form-grid"><input id="driverTaskIdDeliver" placeholder="delivery_task_id" /><textarea id="driverDeliverBody">{"status":"delivered"}</textarea><div class="btn-row"><button class="btn warn" data-api-action data-method="POST" data-endpoint="/api/v1/delivery-tasks/{id}/status" data-path-input="#driverTaskIdDeliver" data-input="#driverDeliverBody" data-output="#driverDeliverOut">确认送达</button></div></div></article>
+          <article class="surface"><h4>异常上报</h4><div class="form-grid"><input id="driverTaskIdFail" placeholder="delivery_task_id" /><textarea id="driverFailBody">{"status":"failed","fail_reason":"customer unreachable"}</textarea><div class="btn-row"><button class="btn error" data-api-action data-method="POST" data-endpoint="/api/v1/delivery-tasks/{id}/status" data-path-input="#driverTaskIdFail" data-input="#driverFailBody" data-output="#driverDeliverOut">上报失败</button></div></div></article>
+        </div>
+        <pre id="driverDeliverOut" class="api-console"></pre>
+      </section>
+
+      <section class="workspace-panel" data-view="earnings">
+        <div class="panel-head"><h2 class="panel-title">收益</h2><p class="panel-desc">配送费先进入 delivery_fee_earnings，settled 后再入钱包。</p></div>
+        <div class="table-wrap"><table class="data-table"><thead><tr><th>任务</th><th>费用</th><th>状态</th><th>结算批次</th></tr></thead><tbody><tr><td>TASK-597</td><td>￥18.00</td><td><span class="chip pending">pending</span></td><td>-</td></tr><tr><td>TASK-590</td><td>￥16.00</td><td><span class="chip success">settled</span></td><td>SET-20260416-06</td></tr></tbody></table></div>
+      </section>
+
+      <section class="workspace-panel" data-view="wallet">
+        <div class="panel-head"><h2 class="panel-title">司机钱包</h2><p class="panel-desc">展示三桶余额与提现状态。</p></div>
+        <div class="bucket-grid">
+          <article class="bucket withdrawable"><h4>withdrawable_balance</h4><p>￥860.00</p><small>可提现配送收益</small></article>
+          <article class="bucket non-withdrawable"><h4>non_withdrawable_balance</h4><p>￥40.00</p><small>平台激励</small></article>
+          <article class="bucket frozen"><h4>frozen_balance</h4><p>￥120.00</p><small>提现审核中</small></article>
+        </div>
+      </section>
+
+      <section class="workspace-panel" data-view="states">
+        <div class="panel-head"><h2 class="panel-title">状态页组件（Driver）</h2><p class="panel-desc">配送端状态统一。</p></div>
+        <div class="state-grid">
+          <article class="state-card"><p class="state-title">loading</p><p class="state-note">定位附近任务...</p><div class="loading-bar"></div></article>
+          <article class="state-card"><p class="state-title">empty</p><p class="state-note">当前无可接任务。</p><span class="chip neutral" style="margin-top:8px;">empty</span></article>
+          <article class="state-card"><p class="state-title">error</p><p class="state-note">状态提交失败，请检查网络。</p><span class="chip error" style="margin-top:8px;">error</span></article>
+          <article class="state-card"><p class="state-title">success</p><p class="state-note">送达确认成功。</p><span class="chip success" style="margin-top:8px;">delivered</span></article>
+          <article class="state-card"><p class="state-title">pending</p><p class="state-note">任务已接单，等待提货。</p><span class="chip pending" style="margin-top:8px;">accepted</span></article>
+        </div>
+      </section>
+    </main>
+
+    <section class="auth-bar" style="margin-top:14px;">
+      <div class="auth-grid">
+        <input id="authEmail" value="driver1@fresh2u.local" />
+        <input id="authPassword" type="password" value="pass123456" />
+        <input id="authTenant" value="10000000-0000-0000-0000-000000000001" />
+        <button class="btn" id="loginBtn">登录</button>
+      </div>
+      <p class="inline-note">当前用户：<strong data-auth-user>-</strong> | 角色：<strong data-auth-role>-</strong> | Token：<span data-auth-token>-</span></p>
+      <pre id="authOut" class="api-console"></pre>
+    </section>
+  </div>
+</div>
 <script src="/assets/app.js"></script>
-<script>
-Fresh2U.bindAuthPanel();
-document.getElementById("taskBtn").onclick = async () => {
-  try {
-    const id = document.getElementById("taskId").value;
-    const status = document.getElementById("taskStatus").value;
-    Fresh2U.print("taskOut", await Fresh2U.api(`/api/v1/delivery-tasks/${id}/status`, "POST", { status }));
-  } catch (e) { Fresh2U.print("taskOut", e.message); }
-};
-document.getElementById("walletBtn").onclick = async () => {
-  try {
-    const ownerId = document.getElementById("driverOwnerId").value;
-    Fresh2U.print("walletOut", await Fresh2U.api(`/api/v1/wallets/driver/${ownerId}`));
-  } catch (e) { Fresh2U.print("walletOut", e.message); }
-};
-</script>
-</body></html>
+</body>
+</html>
+

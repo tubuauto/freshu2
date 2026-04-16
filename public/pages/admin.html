@@ -1,93 +1,128 @@
-<!doctype html>
-<html lang="en"><head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin Console</title>
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin · Fresh2U</title>
   <link rel="stylesheet" href="/assets/app.css" />
 </head>
-<body><main class="shell">
-  <section class="topbar">
-    <h1>Admin Console</h1>
-    <div class="role-nav"><a href="/pages/index.html">All Roles</a></div>
-    <div class="controls">
-      <input id="authEmail" value="admin@fresh2u.local" />
-      <input id="authPassword" type="password" value="pass123456" />
-      <input id="authTenant" placeholder="tenant merchant id" />
-      <button id="loginBtn">Login</button>
+<body class="role-body" data-role-page="true" data-default-view="user-roles">
+<div class="app-shell">
+  <aside class="side-rail">
+    <div class="brand">
+      <span class="brand-mark"><span class="mark-dot">F2</span>Fresh2U</span>
+      <span class="role-badge">admin</span>
     </div>
-    <pre id="authOut" class="out"></pre>
-  </section>
+    <p class="rail-meta">审核与风控中枢：充值审核、提现审核、结算台账、角色与权限治理。</p>
+    <nav class="nav-scroll">
+      <button class="nav-item" data-nav-view="user-roles">用户角色</button>
+      <button class="nav-item" data-nav-view="recharge-review">充值审核</button>
+      <button class="nav-item" data-nav-view="withdrawal-review">提现审核</button>
+      <button class="nav-item" data-nav-view="wallet-tx">钱包流水</button>
+      <button class="nav-item" data-nav-view="coupons">优惠券</button>
+      <button class="nav-item" data-nav-view="ledger">结算台账</button>
+      <button class="nav-item" data-nav-view="risk">风控</button>
+      <button class="nav-item" data-nav-view="states">状态页</button>
+      <a class="nav-item" style="text-decoration:none;" href="/pages/index.html">角色入口</a>
+    </nav>
+  </aside>
 
-  <section class="grid">
-    <article class="card">
-      <h2>Review Cash Recharge</h2>
-      <input id="rechargeId" placeholder="recharge_order_id" />
-      <select id="rechargeAction"><option>approve</option><option>reject</option></select>
-      <button id="rechargeBtn">POST /recharges/{id}/review</button>
-      <pre id="rechargeOut" class="out"></pre>
-    </article>
+  <div class="workspace">
+    <header class="workspace-head">
+      <div class="head-main">
+        <p class="kicker">Admin Governance</p>
+        <h1 class="headline">平台审核与治理中心</h1>
+        <p class="head-desc">覆盖角色治理、充值提现审核、结算过账、台账追踪与风险拦截。</p>
+      </div>
+      <div class="kpi-grid">
+        <article class="kpi"><p class="kpi-label">待审核充值</p><p class="kpi-value">12</p><p class="kpi-sub">cash recharge</p></article>
+        <article class="kpi"><p class="kpi-label">待审核提现</p><p class="kpi-value">9</p><p class="kpi-sub">withdrawal_requests</p></article>
+        <article class="kpi"><p class="kpi-label">待过账结算</p><p class="kpi-value">6</p><p class="kpi-sub">settlements approved</p></article>
+        <article class="kpi"><p class="kpi-label">风控告警</p><p class="kpi-value">3</p><p class="kpi-sub">high risk</p></article>
+      </div>
+    </header>
 
-    <article class="card">
-      <h2>Review Withdrawal</h2>
-      <input id="withdrawalId" placeholder="withdrawal_request_id" />
-      <select id="withdrawAction"><option>approve</option><option>reject</option></select>
-      <button id="withdrawBtn">POST /withdrawals/{id}/review</button>
-      <pre id="withdrawOut" class="out"></pre>
-    </article>
+    <main class="panel-stack">
+      <section class="workspace-panel" data-view="user-roles">
+        <div class="panel-head"><h2 class="panel-title">用户角色管理</h2><p class="panel-desc">管理 customer / leader / merchant / supply_partner / pickup_hub / driver / admin。</p></div>
+        <div class="table-wrap"><table class="data-table"><thead><tr><th>用户</th><th>角色</th><th>tenant</th><th>状态</th><th>动作</th></tr></thead><tbody><tr><td>leader1@fresh2u.local</td><td>leader</td><td>merchant_001</td><td><span class="chip success">active</span></td><td><span class="chip neutral">查看权限</span></td></tr><tr><td>driver1@fresh2u.local</td><td>driver</td><td>merchant_001</td><td><span class="chip success">active</span></td><td><span class="chip neutral">任务审计</span></td></tr></tbody></table></div>
+      </section>
 
-    <article class="card">
-      <h2>Review Settlement</h2>
-      <input id="settlementId" placeholder="settlement_id" />
-      <select id="settleAction"><option>approve</option><option>reject</option></select>
-      <button id="reviewSettleBtn">POST /settlements/{id}/review</button>
-      <button id="postSettleBtn" class="alt">POST /settlements/{id}/post</button>
-      <pre id="settleOut" class="out"></pre>
-    </article>
+      <section class="workspace-panel" data-view="recharge-review">
+        <div class="panel-head"><h2 class="panel-title">充值审核</h2><p class="panel-desc">针对现金充值单进行审核，不允许手工改余额。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>待审核充值单</h4><ul class="entity-list"><li class="entity-item"><div class="entity-main"><p class="entity-title">CRG-20260416-011</p><p class="entity-meta">customer_004 ￥50 leader 收款</p></div><span class="chip pending">awaiting_review</span></li></ul></article>
+          <article class="surface"><h4>审核动作</h4><div class="form-grid"><input id="adminRechargeId" placeholder="recharge_order_id" /><textarea id="adminRechargeActionBody">{"action":"approve"}</textarea><div class="btn-row"><button class="btn" data-api-action data-method="POST" data-endpoint="/api/v1/recharges/{id}/review" data-path-input="#adminRechargeId" data-input="#adminRechargeActionBody" data-output="#adminRechargeOut">提交审核</button></div></div></article>
+        </div>
+        <pre id="adminRechargeOut" class="api-console"></pre>
+      </section>
 
-    <article class="card">
-      <h2>Ledger Entries</h2>
-      <button id="ledgerBtn">GET /ledger-entries</button>
-      <pre id="ledgerOut" class="out"></pre>
-    </article>
-  </section>
-</main>
+      <section class="workspace-panel" data-view="withdrawal-review">
+        <div class="panel-head"><h2 class="panel-title">提现审核</h2><p class="panel-desc">审核通过：frozen 扣减并出账；拒绝：frozen 回退到 withdrawable。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>待审核申请</h4><ul class="entity-list"><li class="entity-item"><div class="entity-main"><p class="entity-title">WDR-20260416-021</p><p class="entity-meta">leader_003 ￥100</p></div><span class="chip pending">pending_review</span></li></ul></article>
+          <article class="surface"><h4>审核动作</h4><div class="form-grid"><input id="adminWithdrawalId" placeholder="withdrawal_id" /><textarea id="adminWithdrawalActionBody">{"action":"approve"}</textarea><div class="btn-row"><button class="btn warn" data-api-action data-method="POST" data-endpoint="/api/v1/withdrawals/{id}/review" data-path-input="#adminWithdrawalId" data-input="#adminWithdrawalActionBody" data-output="#adminWithdrawalOut">执行审核</button></div></div></article>
+        </div>
+        <pre id="adminWithdrawalOut" class="api-console"></pre>
+      </section>
+
+      <section class="workspace-panel" data-view="wallet-tx">
+        <div class="panel-head"><h2 class="panel-title">钱包流水审计</h2><p class="panel-desc">按 owner_type + owner_id 追溯余额变化，确保每笔变更有 transaction 记录。</p></div>
+        <div class="table-wrap"><table class="data-table"><thead><tr><th>transaction_type</th><th>owner</th><th>bucket</th><th>direction</th><th>amount</th><th>reference</th></tr></thead><tbody><tr><td>withdrawal_freeze</td><td>leader_003</td><td>frozen_balance</td><td>credit</td><td>￥100.00</td><td>WDR-20260416-021</td></tr><tr><td>settlement_credit</td><td>driver_006</td><td>withdrawable_balance</td><td>credit</td><td>￥16.00</td><td>SET-20260416-06</td></tr></tbody></table></div>
+      </section>
+
+      <section class="workspace-panel" data-view="coupons">
+        <div class="panel-head"><h2 class="panel-title">优惠券管理</h2><p class="panel-desc">审核券策略与作用域，确保一单一券且可审计。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>创建优惠券</h4><div class="form-grid"><textarea id="adminCouponBody">{"coupon_type":"threshold_discount","scope":"merchant","title":"满50减10","min_order_amount":50,"discount_amount":10,"total_qty":500}</textarea><div class="btn-row"><button class="btn" data-api-action data-method="POST" data-endpoint="/api/v1/coupons" data-input="#adminCouponBody" data-output="#adminCouponOut">创建券</button></div></div></article>
+          <article class="surface"><h4>策略检查</h4><p>确保新用户券与折扣券不叠加，取消订单后可按有效期释放券。</p></article>
+        </div>
+        <pre id="adminCouponOut" class="api-console"></pre>
+      </section>
+
+      <section class="workspace-panel" data-view="ledger">
+        <div class="panel-head"><h2 class="panel-title">结算台账</h2><p class="panel-desc">settlement review -> post -> ledger_entries，全链路可追踪。</p></div>
+        <div class="surface-grid">
+          <article class="surface"><h4>审核结算</h4><div class="form-grid"><input id="adminSettlementId" placeholder="settlement_id" /><textarea id="adminSettlementReviewBody">{"action":"approve"}</textarea><div class="btn-row"><button class="btn" data-api-action data-method="POST" data-endpoint="/api/v1/settlements/{id}/review" data-path-input="#adminSettlementId" data-input="#adminSettlementReviewBody" data-output="#adminLedgerOut">审核</button><button class="btn warn" data-api-action data-method="POST" data-endpoint="/api/v1/settlements/{id}/post" data-path-input="#adminSettlementId" data-input="#adminSettlementPostBody" data-output="#adminLedgerOut">过账</button></div><textarea id="adminSettlementPostBody">{}</textarea></div></article>
+          <article class="surface"><h4>查看台账</h4><div class="btn-row"><button class="btn ghost" data-api-action data-method="GET" data-endpoint="/api/v1/ledger-entries" data-output="#adminLedgerOut">获取 ledger_entries</button></div></article>
+        </div>
+        <pre id="adminLedgerOut" class="api-console"></pre>
+      </section>
+
+      <section class="workspace-panel" data-view="risk">
+        <div class="panel-head"><h2 class="panel-title">风控中心</h2><p class="panel-desc">监控异常充值、异常提现、交接异常、重复补贴等风险。</p></div>
+        <ul class="entity-list">
+          <li class="entity-item"><div class="entity-main"><p class="entity-title">风险告警 #R-1001</p><p class="entity-meta">同一客户 10 分钟内连续 5 笔现金充值申请</p></div><span class="chip error">high</span></li>
+          <li class="entity-item"><div class="entity-main"><p class="entity-title">风险告警 #R-1002</p><p class="entity-meta">提现账户与历史账户不一致</p></div><span class="chip warning">medium</span></li>
+          <li class="entity-item"><div class="entity-main"><p class="entity-title">风险告警 #R-1003</p><p class="entity-meta">pickup_hub 交接缺少 receipt 关联</p></div><span class="chip pending">investigating</span></li>
+        </ul>
+      </section>
+
+      <section class="workspace-panel" data-view="states">
+        <div class="panel-head"><h2 class="panel-title">状态页组件（Admin）</h2><p class="panel-desc">审核台必备状态反馈。</p></div>
+        <div class="state-grid">
+          <article class="state-card"><p class="state-title">loading</p><p class="state-note">正在拉取审核队列...</p><div class="loading-bar"></div></article>
+          <article class="state-card"><p class="state-title">empty</p><p class="state-note">当前无待审核任务。</p><span class="chip neutral" style="margin-top:8px;">empty</span></article>
+          <article class="state-card"><p class="state-title">error</p><p class="state-note">审核提交失败，可能权限不足。</p><span class="chip error" style="margin-top:8px;">error</span></article>
+          <article class="state-card"><p class="state-title">success</p><p class="state-note">审核通过并完成流程推进。</p><span class="chip success" style="margin-top:8px;">success</span></article>
+          <article class="state-card"><p class="state-title">pending</p><p class="state-note">需二次复核的高风险单据。</p><span class="chip pending" style="margin-top:8px;">pending</span></article>
+        </div>
+      </section>
+    </main>
+
+    <section class="auth-bar" style="margin-top:14px;">
+      <div class="auth-grid">
+        <input id="authEmail" value="admin@fresh2u.local" />
+        <input id="authPassword" type="password" value="pass123456" />
+        <input id="authTenant" value="10000000-0000-0000-0000-000000000001" />
+        <button class="btn" id="loginBtn">登录</button>
+      </div>
+      <p class="inline-note">当前用户：<strong data-auth-user>-</strong> | 角色：<strong data-auth-role>-</strong> | Token：<span data-auth-token>-</span></p>
+      <pre id="authOut" class="api-console"></pre>
+    </section>
+  </div>
+</div>
 <script src="/assets/app.js"></script>
-<script>
-Fresh2U.bindAuthPanel();
-document.getElementById("rechargeBtn").onclick = async () => {
-  try {
-    const id = document.getElementById("rechargeId").value;
-    const action = document.getElementById("rechargeAction").value;
-    Fresh2U.print("rechargeOut", await Fresh2U.api(`/api/v1/recharges/${id}/review`, "POST", { action }));
-  } catch (e) { Fresh2U.print("rechargeOut", e.message); }
-};
+</body>
+</html>
 
-document.getElementById("withdrawBtn").onclick = async () => {
-  try {
-    const id = document.getElementById("withdrawalId").value;
-    const action = document.getElementById("withdrawAction").value;
-    Fresh2U.print("withdrawOut", await Fresh2U.api(`/api/v1/withdrawals/${id}/review`, "POST", { action }));
-  } catch (e) { Fresh2U.print("withdrawOut", e.message); }
-};
-
-document.getElementById("reviewSettleBtn").onclick = async () => {
-  try {
-    const id = document.getElementById("settlementId").value;
-    const action = document.getElementById("settleAction").value;
-    Fresh2U.print("settleOut", await Fresh2U.api(`/api/v1/settlements/${id}/review`, "POST", { action }));
-  } catch (e) { Fresh2U.print("settleOut", e.message); }
-};
-
-document.getElementById("postSettleBtn").onclick = async () => {
-  try {
-    const id = document.getElementById("settlementId").value;
-    Fresh2U.print("settleOut", await Fresh2U.api(`/api/v1/settlements/${id}/post`, "POST", {}));
-  } catch (e) { Fresh2U.print("settleOut", e.message); }
-};
-
-document.getElementById("ledgerBtn").onclick = async () => {
-  try {
-    Fresh2U.print("ledgerOut", await Fresh2U.api("/api/v1/ledger-entries"));
-  } catch (e) { Fresh2U.print("ledgerOut", e.message); }
-};
-</script>
-</body></html>
